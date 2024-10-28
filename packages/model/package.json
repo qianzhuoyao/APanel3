@@ -1,0 +1,22 @@
+{
+  "name": "@repo/model",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "exports": {
+    "./createLayerMap": {
+      "types": "./src/block/index.ts",
+      "default": "./src/block/index.ts"
+    }
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tailwind-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@repo/window": "workspace:*",
+    "@repo/lib": "workspace:*",
+    "typescript": "latest"
+  }
+}

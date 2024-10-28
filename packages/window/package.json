@@ -1,0 +1,17 @@
+{
+  "name": "@repo/window",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "exports": {
+    "default": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@repo/lib": "workspace:*",
+    "typescript": "latest"
+  }
+}
