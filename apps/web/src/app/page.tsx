@@ -10,18 +10,19 @@ export default function Page(): JSX.Element {
       const handler = Handler.handler({
         node: itemRef.current,
       });
-      //const dragObj = Handler.createDragEvent(itemRef.current);
-      Object.keys(handler.pointer).map((key) => {
-        Handler.createResizeEvent(handler.pointer[key]);
+      const dragObj = Handler.createDragEvent(itemRef.current);
+      const resizeObj = Object.keys(handler.pointer).map((key) => {
+        return Handler.createResizeEvent(handler.pointer[key]).observable;
       });
-
+      console.log(resizeObj, "resizeObj");
+     
       handler.setSelected(true);
       handler.addEventListener("click", () => {
-       // handler.setSelected(!handler.isSelected());
+        // handler.setSelected(!handler.isSelected());
       });
       return () => {
         handler.remove();
-       // dragObj.subscription.unsubscribe();
+        // dragObj.subscription.unsubscribe();
       };
     }
   }, []);
