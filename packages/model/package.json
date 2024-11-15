@@ -6,10 +6,7 @@
     "build": "tsc"
   },
   "exports": {
-    "./createLayerMap": {
-      "types": "./src/block/index.ts",
-      "default": "./src/block/index.ts"
-    }
+    "default": "./src/index.ts"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

@@ -14,6 +14,7 @@
     "typescript": "latest"
   },
   "dependencies": {
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "uuid": "^11.0.2"
   }
 }
