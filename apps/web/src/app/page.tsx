@@ -7,21 +7,13 @@ export default function Page(): JSX.Element {
 
   useEffect(() => {
     if (itemRef.current) {
-      const handler = Handler.handler({
+      const h = Handler.createDefaultPermissionHandler({
         node: itemRef.current,
+        selected: true,
       });
-      const dragObj = Handler.createDragEvent(itemRef.current);
-      const resizeObj = Object.keys(handler.pointer).map((key) => {
-        return Handler.createResizeEvent(handler.pointer[key]).observable;
-      });
-      console.log(resizeObj, "resizeObj");
-     
-      handler.setSelected(true);
-      handler.addEventListener("click", () => {
-        // handler.setSelected(!handler.isSelected());
-      });
+
       return () => {
-        handler.remove();
+        h.handler.remove();
         // dragObj.subscription.unsubscribe();
       };
     }

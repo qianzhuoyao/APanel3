@@ -1,7 +1,9 @@
-import { IHandler } from "./handler.type";
+import { IHandler, IHandlerParams } from "./handler.type";
 import { permission, Rxjs, Uuid } from "@repo/lib";
 import { CONSTANT } from "@repo/window";
-import { createPointers } from "./pointer";
+import { createPointers, POINTER_POSITION_CODE } from "./pointer";
+import { createDragEvent, createResizeEvent } from "./event";
+
 /**
  *
  * This function adds control handles to the specified DOM
@@ -12,27 +14,29 @@ import { createPointers } from "./pointer";
  *
  * @param param0
  */
-export const handler: IHandler = ({ node, initPermission }) => {
-  const eventSubscriptionMap = {} as Record<string, Rxjs.Subscription>;
-
-  //权限
-  const nodePermission = permission.createPermission(
-    initPermission ||
-      CONSTANT.PERMISSION_HANDLER.DRAGGABLE |
-        CONSTANT.PERMISSION_HANDLER.RESIZABLE |
-        CONSTANT.PERMISSION_HANDLER.ROTATABLE
-  );
-  node.style.position = "relative";
+export const handler: IHandler = ({
+  node,
+  handlerContainer,
+  selected,
+  nodePermission,
+  eventSubscriptionMap,
+  groupId,
+}) => {
   //给元素增加权限信息
   node.setAttribute(
     CONSTANT.PERMISSION_ATTRIBUTE.DATA_ELEMENT_ATTRIBUTE_KEY,
-    nodePermission.getPermission().toString()
+    nodePermission.toString()
   );
-  const groupId = Uuid.v4();
+
+  if (selected) {
+    handlerContainer.style.display = selected ? "block" : "none";
+    handlerContainer.style.border = "1px dashed";
+  }
+
+  node.style.position = "relative";
+
   //给元素增加分组信息
   node.setAttribute(CONSTANT.NODE.ROLE.GROUP_MASTER_KEY, groupId);
-  //创建handler
-  const handlerContainer = document.createElement("div");
 
   const pointer = createPointers(handlerContainer, groupId);
 
@@ -42,20 +46,19 @@ export const handler: IHandler = ({ node, initPermission }) => {
     Object.keys(eventSubscriptionMap).forEach((eventName) => {
       eventSubscriptionMap[eventName].unsubscribe();
     });
-    node.removeChild(handlerContainer);
+    handlerContainer.remove();
+    return null;
   };
 
   const setSelected = (selected: boolean) => {
-    if (!isRemoved()) {
-      handlerContainer.style.display = selected ? "block" : "none";
-      handlerContainer.style.border = "1px dashed";
-      return 1;
-    }
-    throw new ReferenceError("当前handler已经被卸载无法操作");
-  };
-
-  const isRemoved = () => {
-    return !node.contains(handlerContainer);
+    return handler({
+      node,
+      selected,
+      handlerContainer,
+      nodePermission,
+      eventSubscriptionMap,
+      groupId,
+    });
   };
 
   const addEventListener = (
@@ -67,6 +70,37 @@ export const handler: IHandler = ({ node, initPermission }) => {
     );
   };
 
+  const getNodePermission = () => {
+    return nodePermission;
+  };
+
+  //混入默认事件
+  if (nodePermission & CONSTANT.PERMISSION_HANDLER.DRAGGABLE) {
+    eventSubscriptionMap._Drag = createDragEvent(node).subscription;
+  }
+  if (nodePermission & CONSTANT.PERMISSION_HANDLER.RESIZABLE) {
+    POINTER_POSITION_CODE.forEach((key) => {
+      eventSubscriptionMap[`_Resize${key}`] = createResizeEvent(
+        pointer[key]
+      ).subscription;
+    });
+  }
+  console.log(
+    nodePermission & CONSTANT.PERMISSION_HANDLER.RESIZABLE,
+    eventSubscriptionMap,
+    "sggg"
+  );
+  const setNodePermission = (nodePermission: number) => {
+    return handler({
+      node,
+      selected,
+      handlerContainer,
+      nodePermission,
+      eventSubscriptionMap,
+      groupId,
+    });
+  };
+
   const isSelected = () => {
     return !(handlerContainer.style.display === "none");
   };
@@ -74,12 +108,50 @@ export const handler: IHandler = ({ node, initPermission }) => {
   return {
     node,
     pointer,
-    nodePermission,
     handlerContainer,
     remove,
-    isRemoved,
     isSelected,
     setSelected,
     addEventListener,
+    getNodePermission,
+    setNodePermission,
+  };
+};
+
+export const createHandler = ({
+  selected,
+  node,
+  nodePermission,
+}: Pick<IHandlerParams, "selected" | "node" | "nodePermission">) => {
+  const groupId = Uuid.v4();
+  const handlerContainer = document.createElement("div");
+
+  return handler({
+    groupId,
+    nodePermission,
+    handlerContainer,
+    node,
+    selected,
+    eventSubscriptionMap: {},
+  });
+};
+//创建一个包含基本事件权限的handler
+export const createDefaultPermissionHandler = ({
+  selected,
+  node,
+}: Pick<IHandlerParams, "selected" | "node">) => {
+  const localNodePermission: ReturnType<typeof permission.createPermission> =
+    permission.createPermission(
+      CONSTANT.PERMISSION_HANDLER.DRAGGABLE |
+        CONSTANT.PERMISSION_HANDLER.RESIZABLE |
+        CONSTANT.PERMISSION_HANDLER.ROTATABLE
+    );
+  return {
+    localNodePermission,
+    handler: createHandler({
+      nodePermission: localNodePermission.getPermission(),
+      node,
+      selected,
+    }),
   };
 };

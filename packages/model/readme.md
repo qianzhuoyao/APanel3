@@ -1,0 +1,1 @@
+通过handler来让dom可以移动与resize
