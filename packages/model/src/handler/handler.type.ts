@@ -8,7 +8,7 @@ export interface IHandlerParams {
   handlerContainer: HTMLDivElement;
   groupId: string;
   _pointer?: Record<IType_of_POINTER_POSITION_CODE, HTMLDivElement>;
-  eventSubscriptionMap: Record<string, Rxjs.Subscription>;
+  eventSubscriptionMap: Record<string, Rxjs.Subscription | void>;
 }
 
 export interface IHandlerResizeEventStage {
@@ -28,6 +28,7 @@ export interface IHandlerDragEventStage {
 
 export interface IHandlerResult {
   node: HTMLElement;
+  handlerId: string;
   pointer: Record<IType_of_POINTER_POSITION_CODE, HTMLDivElement>;
   handlerContainer: HTMLDivElement;
   remove: () => void;

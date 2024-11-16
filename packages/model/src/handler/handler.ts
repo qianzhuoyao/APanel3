@@ -45,6 +45,16 @@ export const handler: IHandler = ({
     throw new TypeError("nodePermission type not is number");
   }
 
+  const handlerId = Uuid.v4();
+
+  const clearDefaultEvent = () => {
+    eventSubscriptionMap._Drag?.unsubscribe();
+    POINTER_POSITION_CODE.forEach((key) => {
+      eventSubscriptionMap[`_Resize${key}`]?.unsubscribe();
+    });
+  };
+  //优先清理事件，确保唯一
+  clearDefaultEvent();
   //给元素增加权限信息
   node.setAttribute(
     PERMISSION_ATTRIBUTE.DATA_ELEMENT_ATTRIBUTE_KEY,
@@ -67,7 +77,7 @@ export const handler: IHandler = ({
 
   const remove = () => {
     Object.keys(eventSubscriptionMap).forEach((eventName) => {
-      eventSubscriptionMap[eventName].unsubscribe();
+      eventSubscriptionMap[eventName]?.unsubscribe();
     });
     handlerContainer.remove();
     return null;
@@ -182,6 +192,13 @@ export const handler: IHandler = ({
     });
   }
 
+  console.log(
+    handlerId,
+    eventSubscriptionMap,
+    nodePermission,
+    nodePermission & PERMISSION_HANDLER.DRAGGABLE,
+    "eventSubscriptionMap"
+  );
   const setNodePermission = (nodePermission: number) => {
     return handler({
       node,
@@ -205,6 +222,7 @@ export const handler: IHandler = ({
   };
 
   return {
+    handlerId,
     node,
     pointer,
     handlerContainer,
