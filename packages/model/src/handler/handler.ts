@@ -1,8 +1,9 @@
 import { IHandler, IHandlerParams } from "./handler.type";
 import { permission, Rxjs, Uuid } from "@repo/lib";
-import { CONSTANT } from "@repo/window";
+
 import { createPointers, POINTER_POSITION_CODE } from "./pointer";
 import { createDragEvent, createResizeEvent } from "./event";
+import { NODE, PERMISSION_ATTRIBUTE, PERMISSION_HANDLER } from "./constant.ts";
 
 /**
  *
@@ -22,9 +23,16 @@ export const handler: IHandler = ({
   eventSubscriptionMap,
   groupId,
 }) => {
+  if (!(node instanceof HTMLElement)) {
+    throw new TypeError("node type not is HTMLElement");
+  }
+  if (typeof nodePermission !== "number") {
+    throw new TypeError("nodePermission type not is number");
+  }
+
   //给元素增加权限信息
   node.setAttribute(
-    CONSTANT.PERMISSION_ATTRIBUTE.DATA_ELEMENT_ATTRIBUTE_KEY,
+    PERMISSION_ATTRIBUTE.DATA_ELEMENT_ATTRIBUTE_KEY,
     nodePermission.toString()
   );
 
@@ -36,7 +44,7 @@ export const handler: IHandler = ({
   node.style.position = "relative";
 
   //给元素增加分组信息
-  node.setAttribute(CONSTANT.NODE.ROLE.GROUP_MASTER_KEY, groupId);
+  node.setAttribute(NODE.ROLE.GROUP_MASTER_KEY, groupId);
 
   const pointer = createPointers(handlerContainer, groupId);
 
@@ -75,10 +83,10 @@ export const handler: IHandler = ({
   };
 
   //混入默认事件
-  if (nodePermission & CONSTANT.PERMISSION_HANDLER.DRAGGABLE) {
+  if (nodePermission & PERMISSION_HANDLER.DRAGGABLE) {
     eventSubscriptionMap._Drag = createDragEvent(node).subscription;
   }
-  if (nodePermission & CONSTANT.PERMISSION_HANDLER.RESIZABLE) {
+  if (nodePermission & PERMISSION_HANDLER.RESIZABLE) {
     POINTER_POSITION_CODE.forEach((key) => {
       eventSubscriptionMap[`_Resize${key}`] = createResizeEvent(
         pointer[key]
@@ -86,7 +94,7 @@ export const handler: IHandler = ({
     });
   }
   console.log(
-    nodePermission & CONSTANT.PERMISSION_HANDLER.RESIZABLE,
+    nodePermission & PERMISSION_HANDLER.RESIZABLE,
     eventSubscriptionMap,
     "sggg"
   );
@@ -136,22 +144,23 @@ export const createHandler = ({
   });
 };
 //创建一个包含基本事件权限的handler
-export const createDefaultPermissionHandler = ({
+export const createPermissionHandler = ({
   selected,
   node,
 }: Pick<IHandlerParams, "selected" | "node">) => {
   const localNodePermission: ReturnType<typeof permission.createPermission> =
     permission.createPermission(
-      CONSTANT.PERMISSION_HANDLER.DRAGGABLE |
-        CONSTANT.PERMISSION_HANDLER.RESIZABLE |
-        CONSTANT.PERMISSION_HANDLER.ROTATABLE
+      PERMISSION_HANDLER.DRAGGABLE |
+        PERMISSION_HANDLER.RESIZABLE |
+        PERMISSION_HANDLER.ROTATABLE
     );
+  const handler = createHandler({
+    nodePermission: localNodePermission.getPermission(),
+    node,
+    selected,
+  });
+
   return {
-    localNodePermission,
-    handler: createHandler({
-      nodePermission: localNodePermission.getPermission(),
-      node,
-      selected,
-    }),
+    handler,
   };
 };

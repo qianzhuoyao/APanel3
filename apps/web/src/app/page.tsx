@@ -7,7 +7,7 @@ export default function Page(): JSX.Element {
 
   useEffect(() => {
     if (itemRef.current) {
-      const h = Handler.createDefaultPermissionHandler({
+      const h = Handler.createPermissionHandler({
         node: itemRef.current,
         selected: true,
       });

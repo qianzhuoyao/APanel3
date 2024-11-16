@@ -1,4 +1,4 @@
-import { CONSTANT } from "@repo/window";
+import { NODE, NODE_HANDLER_ATTRIBUTE } from "./constant";
 
 const pointerSize = [5, 5]; // width height
 
@@ -16,9 +16,9 @@ const setPointerContainerDefault = (node: HTMLElement, groupId: string) => {
   node.style.width = "100%";
   node.style.height = "100%";
   node.style.pointerEvents = "none";
-  node.setAttribute(CONSTANT.NODE.ROLE.GROUP_SOLVE_CONTAINER_KEY, groupId);
+  node.setAttribute(NODE.ROLE.GROUP_SOLVE_CONTAINER_KEY, groupId);
   node.setAttribute(
-    CONSTANT.NODE_HANDLER_ATTRIBUTE.NODE_HANDLER_ATTRIBUTE_CONTAINER,
+    NODE_HANDLER_ATTRIBUTE.NODE_HANDLER_ATTRIBUTE_CONTAINER,
     "1"
   );
 };
@@ -49,11 +49,11 @@ const setPointerDefaultStyle = (pointerElement: HTMLElement) => {
 export const createPointer = (attr: string, groupId: string) => {
   const handlerSubNodePointer = document.createElement("div");
   handlerSubNodePointer.setAttribute(
-    CONSTANT.NODE.ROLE.GROUP_SOLVE_ANCHOR_KEY,
+    NODE.ROLE.GROUP_SOLVE_ANCHOR_KEY,
     groupId
   );
   handlerSubNodePointer.setAttribute(
-    CONSTANT.NODE_HANDLER_ATTRIBUTE.NODE_HANDLER_ATTRIBUTE_ROLE_KEY,
+    NODE_HANDLER_ATTRIBUTE.NODE_HANDLER_ATTRIBUTE_ROLE_KEY,
     attr
   );
 

@@ -1,6 +1,6 @@
 export {
   handler,
-  createDefaultPermissionHandler,
+  createPermissionHandler,
   createHandler,
 } from "./handler";
 export { createDragEvent, createResizeEvent, composeEvent } from "./event";

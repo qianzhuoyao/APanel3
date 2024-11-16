@@ -1,7 +1,7 @@
-import { CONSTANT } from "@repo/window";
 import { POINTER_POSITION_CODE } from "./pointer";
 import { IType_of_POINTER_POSITION_CODE } from "./handler.type";
 import { Rxjs } from "@repo/lib";
+import { EVENT, NODE, NODE_HANDLER_ATTRIBUTE } from "./constant";
 
 export const moveNode = (
   dom: HTMLElement,
@@ -22,17 +22,10 @@ export const createDragEvent = (dom: HTMLElement) => {
     Rxjs.map((downEvent) => {
       return {
         initDomLeft:
-          Number(
-            dom.getAttribute(
-              CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT
-            )
-          ) || 0,
+          Number(dom.getAttribute(EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT)) ||
+          0,
         initDOmTop:
-          Number(
-            dom.getAttribute(
-              CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP
-            )
-          ) || 0,
+          Number(dom.getAttribute(EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP)) || 0,
         initMouseLeft: downEvent.clientX,
         initMouseTop: downEvent.clientY,
       };
@@ -47,8 +40,8 @@ export const createDragEvent = (dom: HTMLElement) => {
             dom,
             [across.initDomLeft + offsetLeft, across.initDOmTop + offsetTop],
             [
-              CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
-              CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
+              EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
+              EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
             ]
           );
         })
@@ -70,14 +63,14 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
   const mouseMove$ = Rxjs.fromEvent<MouseEvent>(document.body, "mousemove");
 
   const position = anchorDom.getAttribute(
-    CONSTANT.NODE_HANDLER_ATTRIBUTE.NODE_HANDLER_ATTRIBUTE_ROLE_KEY
+    NODE_HANDLER_ATTRIBUTE.NODE_HANDLER_ATTRIBUTE_ROLE_KEY
   ) as IType_of_POINTER_POSITION_CODE;
 
   if (POINTER_POSITION_CODE.some((code) => code === position)) {
     const observable = mouseDown$.pipe(
       Rxjs.map((downEvent) => {
         const masterNode = document.querySelectorAll(`
-          *[${CONSTANT.NODE.ROLE.GROUP_MASTER_KEY}='${anchorDom.getAttribute(CONSTANT.NODE.ROLE.GROUP_SOLVE_ANCHOR_KEY)}']
+          *[${NODE.ROLE.GROUP_MASTER_KEY}='${anchorDom.getAttribute(NODE.ROLE.GROUP_SOLVE_ANCHOR_KEY)}']
           `);
 
         if (masterNode?.length === 0) {
@@ -91,10 +84,10 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
         return {
           masterNode,
           masterNodeOffsetLeft: masterNode?.[0]?.getAttribute(
-            CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT
+            EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT
           ),
           masterNodeOffsetTop: masterNode?.[0]?.getAttribute(
-            CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP
+            EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP
           ),
           initMasterNodeWidth: masterNode[0].getBoundingClientRect().width,
           initMasterNodeHeight: masterNode[0].getBoundingClientRect().height,
@@ -123,8 +116,8 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
                         masterNodeOffsetTop + offsetTop,
                       ],
                       [
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
                       ]
                     );
                     ele.style.width =
@@ -140,8 +133,8 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
                         masterNodeOffsetTop,
                       ],
                       [
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
                       ]
                     );
                     ele.style.width =
@@ -155,8 +148,8 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
                         masterNodeOffsetTop,
                       ],
                       [
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
                       ]
                     );
                     ele.style.width =
@@ -172,8 +165,8 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
                         masterNodeOffsetTop + offsetTop,
                       ],
                       [
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
                       ]
                     );
                     ele.style.width =
@@ -189,8 +182,8 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
                         masterNodeOffsetTop,
                       ],
                       [
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
                       ]
                     );
                     ele.style.width =
@@ -204,8 +197,8 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
                         masterNodeOffsetTop,
                       ],
                       [
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
                       ]
                     );
 
@@ -219,8 +212,8 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
                       ele,
                       [masterNodeOffsetLeft, masterNodeOffsetTop + offsetTop],
                       [
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
                       ]
                     );
 
@@ -232,8 +225,8 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
                       ele,
                       [masterNodeOffsetLeft, masterNodeOffsetTop],
                       [
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
-                        CONSTANT.EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
+                        EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
                       ]
                     );
 
