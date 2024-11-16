@@ -3,9 +3,7 @@ import { useRef } from "react";
 import { useCreatePermissionHandler } from "@repo/model";
 
 export default function Page(): JSX.Element {
-  const itemRef = useRef<HTMLDivElement>(null);
-
-  const {setRef} = useCreatePermissionHandler();
+  const { setRef } = useCreatePermissionHandler();
 
   return (
     <main className="flex flex-col items-center justify-between min-h-screen p-24">
