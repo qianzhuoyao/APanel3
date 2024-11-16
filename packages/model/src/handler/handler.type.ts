@@ -11,6 +11,21 @@ export interface IHandlerParams {
   eventSubscriptionMap: Record<string, Rxjs.Subscription>;
 }
 
+export interface IHandlerResizeEventStage {
+  resizeStart: (e: MouseEvent, anchor: IType_of_POINTER_POSITION_CODE) => void;
+  resizeRunning: (
+    e: MouseEvent,
+    anchor: IType_of_POINTER_POSITION_CODE
+  ) => void;
+  resizeFinish: (e: MouseEvent, anchor: IType_of_POINTER_POSITION_CODE) => void;
+}
+
+export interface IHandlerDragEventStage {
+  dragStart: (e: MouseEvent) => void;
+  dragRunning: (e: MouseEvent) => void;
+  dragFinish: (e: MouseEvent) => void;
+}
+
 export interface IHandlerResult {
   node: HTMLElement;
   pointer: Record<IType_of_POINTER_POSITION_CODE, HTMLDivElement>;
@@ -21,12 +36,24 @@ export interface IHandlerResult {
   addEventListener: (
     eventName: string,
     eventCallback: (evt: Event) => void
-  ) => void;
+  ) => IHandlerResult;
   getNodePermission: () => number;
   setNodePermission: (nodePermission: number) => IHandlerResult;
+  addDragEventListener: (
+    eventName: keyof IHandlerDragEventStage,
+    cb: (e: MouseEvent) => void
+  ) => IHandlerResult;
+  addResizeEventListener: (
+    eventName: keyof IHandlerResizeEventStage,
+    cb: (e: MouseEvent, anchor: IType_of_POINTER_POSITION_CODE) => void
+  ) => IHandlerResult;
 }
 
-export type IHandler = (params: IHandlerParams) => IHandlerResult;
+export type IHandler = (
+  params: IHandlerParams &
+    Partial<IHandlerDragEventStage> &
+    Partial<IHandlerResizeEventStage>
+) => IHandlerResult;
 
 export type IType_of_POINTER_POSITION_CODE =
   (typeof POINTER_POSITION_CODE)[number];

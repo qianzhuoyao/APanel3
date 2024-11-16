@@ -1,34 +1,29 @@
-import { RefCallback, useEffect, useRef } from "react";
+import { RefCallback, useRef } from "react";
 import { createPermissionHandler } from "../handler";
+
+type ISetter = (h: ReturnType<typeof createPermissionHandler> | void) => void;
 
 export const useCreatePermissionHandler = () => {
   const handlerRef = useRef<{
-    dom: HTMLElement | null;
-    h: ReturnType<typeof createPermissionHandler> | void;
-  }>({ h: void 0, dom: null });
-  useEffect(() => {
-    console.log(handlerRef.current.dom);
+    setter: ISetter;
+  }>({ setter: () => void 0 });
 
-    if (handlerRef.current.dom) {
+  const setRef: RefCallback<HTMLElement> = (dom) => {
+    if (dom instanceof HTMLElement) {
       const h = createPermissionHandler({
-        node: handlerRef.current.dom,
+        node: dom,
         selected: true,
       });
-
-      handlerRef.current.h = h;
-
-      return () => {
-        h.handler.remove();
-      };
+      handlerRef.current.setter(h);
     }
-  }, []);
+  };
 
-  const setRef: RefCallback<HTMLElement> = (e) => {
-    handlerRef.current.dom = e;
+  const setHandler = (setter: ISetter) => {
+    handlerRef.current.setter = setter;
   };
 
   return {
-    ...handlerRef.current.h,
+    setHandler,
     setRef,
   };
 };

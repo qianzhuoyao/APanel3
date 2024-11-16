@@ -1,5 +1,9 @@
 import { POINTER_POSITION_CODE } from "./pointer";
-import { IType_of_POINTER_POSITION_CODE } from "./handler.type";
+import {
+  IHandlerDragEventStage,
+  IHandlerResizeEventStage,
+  IType_of_POINTER_POSITION_CODE,
+} from "./handler.type";
 import { Rxjs } from "@repo/lib";
 import { EVENT, NODE, NODE_HANDLER_ATTRIBUTE } from "./constant";
 
@@ -13,12 +17,18 @@ export const moveNode = (
   dom.style.transform = `translate(${offset[0]}px,${offset[1]}px)`;
 };
 
-export const createDragEvent = (dom: HTMLElement) => {
+export const createDragEvent = (
+  dom: HTMLElement,
+  callback: Partial<IHandlerDragEventStage>
+) => {
   const mouseDown$ = Rxjs.fromEvent<MouseEvent>(dom, "mousedown");
   const mouseUp$ = Rxjs.fromEvent<MouseEvent>(document.body, "mouseup");
   const mouseMove$ = Rxjs.fromEvent<MouseEvent>(document.body, "mousemove");
 
   const observable = mouseDown$.pipe(
+    Rxjs.tap((e) => {
+      callback?.dragStart?.(e);
+    }),
     Rxjs.map((downEvent) => {
       return {
         initDomLeft:
@@ -32,7 +42,16 @@ export const createDragEvent = (dom: HTMLElement) => {
     }),
     Rxjs.switchMap((across) =>
       mouseMove$.pipe(
-        Rxjs.takeUntil(mouseUp$),
+        Rxjs.tap((e) => {
+          callback?.dragRunning?.(e);
+        }),
+        Rxjs.takeUntil(
+          mouseUp$.pipe(
+            Rxjs.tap((e) => {
+              callback?.dragFinish?.(e);
+            })
+          )
+        ),
         Rxjs.map((moveEvent) => {
           const offsetLeft = moveEvent.clientX - across.initMouseLeft;
           const offsetTop = moveEvent.clientY - across.initMouseTop;
@@ -57,7 +76,10 @@ export const createDragEvent = (dom: HTMLElement) => {
   };
 };
 
-export const createResizeEvent = (anchorDom: HTMLElement) => {
+export const createResizeEvent = (
+  anchorDom: HTMLElement,
+  callback: Partial<IHandlerResizeEventStage>
+) => {
   const mouseDown$ = Rxjs.fromEvent<MouseEvent>(anchorDom, "mousedown");
   const mouseUp$ = Rxjs.fromEvent<MouseEvent>(document.body, "mouseup");
   const mouseMove$ = Rxjs.fromEvent<MouseEvent>(document.body, "mousemove");
@@ -68,6 +90,9 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
 
   if (POINTER_POSITION_CODE.some((code) => code === position)) {
     const observable = mouseDown$.pipe(
+      Rxjs.tap((e) => {
+        callback?.resizeStart?.(e, position);
+      }),
       Rxjs.map((downEvent) => {
         const masterNode = document.querySelectorAll(`
           *[${NODE.ROLE.GROUP_MASTER_KEY}='${anchorDom.getAttribute(NODE.ROLE.GROUP_SOLVE_ANCHOR_KEY)}']
@@ -97,7 +122,16 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
       }),
       Rxjs.switchMap((across) =>
         mouseMove$.pipe(
-          Rxjs.takeUntil(mouseUp$),
+          Rxjs.tap((e) => {
+            callback?.resizeRunning?.(e, position);
+          }),
+          Rxjs.takeUntil(
+            mouseUp$.pipe(
+              Rxjs.tap((e) => {
+                callback?.resizeFinish?.(e, position);
+              })
+            )
+          ),
           Rxjs.map((moveEvent) => {
             const offsetLeft = moveEvent.clientX - across.initMouseLeft;
             const offsetTop = moveEvent.clientY - across.initMouseTop;

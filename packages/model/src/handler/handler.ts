@@ -1,4 +1,11 @@
-import { IHandler, IHandlerParams } from "./handler.type";
+import {
+  IHandler,
+  IHandlerDragEventStage,
+  IHandlerParams,
+  IHandlerResizeEventStage,
+  IHandlerResult,
+  IType_of_POINTER_POSITION_CODE,
+} from "./handler.type";
 import { permission, Rxjs, Uuid } from "@repo/lib";
 
 import { createPointers, POINTER_POSITION_CODE } from "./pointer";
@@ -23,6 +30,12 @@ export const handler: IHandler = ({
   nodePermission,
   eventSubscriptionMap,
   groupId,
+  dragFinish,
+  dragRunning,
+  dragStart,
+  resizeFinish,
+  resizeRunning,
+  resizeStart,
   _pointer,
 }) => {
   if (!(node instanceof HTMLElement)) {
@@ -69,6 +82,56 @@ export const handler: IHandler = ({
       eventSubscriptionMap,
       groupId,
       _pointer: pointer,
+      dragFinish,
+      dragRunning,
+      dragStart,
+      resizeFinish,
+      resizeRunning,
+      resizeStart,
+    });
+  };
+
+  const addResizeEventListener: (
+    eventName: keyof IHandlerResizeEventStage,
+    cb: (e: MouseEvent, anchor: IType_of_POINTER_POSITION_CODE) => void
+  ) => IHandlerResult = (eventName, cb) => {
+    return handler({
+      node,
+      selected,
+      handlerContainer,
+      nodePermission,
+      eventSubscriptionMap,
+      groupId,
+      _pointer: pointer,
+      dragFinish,
+      dragRunning,
+      dragStart,
+      resizeFinish,
+      resizeRunning,
+      resizeStart,
+      [eventName]: cb,
+    });
+  };
+
+  const addDragEventListener: (
+    eventName: keyof IHandlerDragEventStage,
+    cb: (e: MouseEvent) => void
+  ) => IHandlerResult = (eventName, cb) => {
+    return handler({
+      node,
+      selected,
+      handlerContainer,
+      nodePermission,
+      eventSubscriptionMap,
+      groupId,
+      _pointer: pointer,
+      dragFinish,
+      dragRunning,
+      dragStart,
+      resizeFinish,
+      resizeRunning,
+      resizeStart,
+      [eventName]: cb,
     });
   };
 
@@ -79,6 +142,21 @@ export const handler: IHandler = ({
     eventSubscriptionMap[eventName] = Rxjs.fromEvent(node, eventName).subscribe(
       eventCallback
     );
+    return handler({
+      node,
+      selected,
+      handlerContainer,
+      nodePermission,
+      eventSubscriptionMap,
+      groupId,
+      _pointer: pointer,
+      dragFinish,
+      dragRunning,
+      dragStart,
+      resizeFinish,
+      resizeRunning,
+      resizeStart,
+    });
   };
 
   const getNodePermission = () => {
@@ -87,14 +165,20 @@ export const handler: IHandler = ({
 
   //混入默认事件
   if (nodePermission & PERMISSION_HANDLER.DRAGGABLE) {
-    eventSubscriptionMap._Drag = createDragEvent(node).subscription;
+    eventSubscriptionMap._Drag = createDragEvent(node, {
+      dragFinish,
+      dragRunning,
+      dragStart,
+    }).subscription;
   }
-  
+
   if (nodePermission & PERMISSION_HANDLER.RESIZABLE) {
     POINTER_POSITION_CODE.forEach((key) => {
-      eventSubscriptionMap[`_Resize${key}`] = createResizeEvent(
-        pointer[key]
-      ).subscription;
+      eventSubscriptionMap[`_Resize${key}`] = createResizeEvent(pointer[key], {
+        resizeFinish,
+        resizeRunning,
+        resizeStart,
+      }).subscription;
     });
   }
 
@@ -106,6 +190,12 @@ export const handler: IHandler = ({
       nodePermission,
       eventSubscriptionMap,
       groupId,
+      dragFinish,
+      dragRunning,
+      dragStart,
+      resizeFinish,
+      resizeRunning,
+      resizeStart,
       _pointer: pointer,
     });
   };
@@ -124,6 +214,8 @@ export const handler: IHandler = ({
     addEventListener,
     getNodePermission,
     setNodePermission,
+    addDragEventListener,
+    addResizeEventListener,
   };
 };
 
