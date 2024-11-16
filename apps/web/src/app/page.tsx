@@ -17,9 +17,9 @@ export default function Page(): JSX.Element {
         console.log("dragRunning");
       })
       .addDragEventListener("dragFinish", () => {
-        console.log(p,"dragFinish");
-        // p.setNodePermission(
-        //   p.getNodePermission() ^ PERMISSION_HANDLER.DRAGGABLE
+        console.log(p, "dragFinish");
+        // p.setNodePermission(per=>
+        //  per ^ PERMISSION_HANDLER.DRAGGABLE
         // );
       })
       .addResizeEventListener("resizeStart", (e, p) => {

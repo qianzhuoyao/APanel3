@@ -39,7 +39,9 @@ export interface IHandlerResult {
     eventCallback: (evt: Event) => void
   ) => IHandlerResult;
   getNodePermission: () => number;
-  setNodePermission: (nodePermission: number) => IHandlerResult;
+  setNodePermission: (
+    permission: (nodePermission: number) => number
+  ) => IHandlerResult;
   addDragEventListener: (
     eventName: keyof IHandlerDragEventStage,
     cb: (e: MouseEvent) => void

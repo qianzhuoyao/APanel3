@@ -47,14 +47,13 @@ export const handler: IHandler = ({
 
   const handlerId = Uuid.v4();
 
-  const clearDefaultEvent = () => {
-    eventSubscriptionMap._Drag?.unsubscribe();
-    POINTER_POSITION_CODE.forEach((key) => {
-      eventSubscriptionMap[`_Resize${key}`]?.unsubscribe();
+  const clearEvent = () => {
+    Object.keys(eventSubscriptionMap).forEach((eventName) => {
+      eventSubscriptionMap[eventName]?.unsubscribe();
     });
   };
   //优先清理事件，确保唯一
-  clearDefaultEvent();
+  clearEvent();
   //给元素增加权限信息
   node.setAttribute(
     PERMISSION_ATTRIBUTE.DATA_ELEMENT_ATTRIBUTE_KEY,
@@ -76,9 +75,7 @@ export const handler: IHandler = ({
   node.appendChild(handlerContainer);
 
   const remove = () => {
-    Object.keys(eventSubscriptionMap).forEach((eventName) => {
-      eventSubscriptionMap[eventName]?.unsubscribe();
-    });
+    clearEvent();
     handlerContainer.remove();
     return null;
   };
@@ -199,12 +196,14 @@ export const handler: IHandler = ({
     nodePermission & PERMISSION_HANDLER.DRAGGABLE,
     "eventSubscriptionMap"
   );
-  const setNodePermission = (nodePermission: number) => {
+  const setNodePermission = (
+    permission: (nodePermission: number) => number
+  ) => {
     return handler({
       node,
       selected,
       handlerContainer,
-      nodePermission,
+      nodePermission: permission(nodePermission),
       eventSubscriptionMap,
       groupId,
       dragFinish,
