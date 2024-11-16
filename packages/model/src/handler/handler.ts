@@ -15,6 +15,7 @@ import { NODE, PERMISSION_ATTRIBUTE, PERMISSION_HANDLER } from "./constant.ts";
  *
  * @param param0
  */
+
 export const handler: IHandler = ({
   node,
   handlerContainer,
@@ -22,6 +23,7 @@ export const handler: IHandler = ({
   nodePermission,
   eventSubscriptionMap,
   groupId,
+  _pointer,
 }) => {
   if (!(node instanceof HTMLElement)) {
     throw new TypeError("node type not is HTMLElement");
@@ -46,7 +48,7 @@ export const handler: IHandler = ({
   //给元素增加分组信息
   node.setAttribute(NODE.ROLE.GROUP_MASTER_KEY, groupId);
 
-  const pointer = createPointers(handlerContainer, groupId);
+  const pointer = _pointer || createPointers(handlerContainer, groupId);
 
   node.appendChild(handlerContainer);
 
@@ -66,6 +68,7 @@ export const handler: IHandler = ({
       nodePermission,
       eventSubscriptionMap,
       groupId,
+      _pointer: pointer,
     });
   };
 
@@ -86,6 +89,7 @@ export const handler: IHandler = ({
   if (nodePermission & PERMISSION_HANDLER.DRAGGABLE) {
     eventSubscriptionMap._Drag = createDragEvent(node).subscription;
   }
+  
   if (nodePermission & PERMISSION_HANDLER.RESIZABLE) {
     POINTER_POSITION_CODE.forEach((key) => {
       eventSubscriptionMap[`_Resize${key}`] = createResizeEvent(
@@ -93,11 +97,7 @@ export const handler: IHandler = ({
       ).subscription;
     });
   }
-  console.log(
-    nodePermission & PERMISSION_HANDLER.RESIZABLE,
-    eventSubscriptionMap,
-    "sggg"
-  );
+
   const setNodePermission = (nodePermission: number) => {
     return handler({
       node,
@@ -106,6 +106,7 @@ export const handler: IHandler = ({
       nodePermission,
       eventSubscriptionMap,
       groupId,
+      _pointer: pointer,
     });
   };
 

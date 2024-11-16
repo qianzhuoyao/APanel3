@@ -255,6 +255,5 @@ export const createResizeEvent = (anchorDom: HTMLElement) => {
 export const composeEvent = <T>(observableList: Rxjs.Observable<T>[]) => {
   console.log(observableList, "observableList");
   const observable = Rxjs.concat(...observableList);
-  const subscription = observable.subscribe();
-  return { observable, subscription };
+  return { observable };
 };

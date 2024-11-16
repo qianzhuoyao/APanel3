@@ -7,12 +7,13 @@ export interface IHandlerParams {
   selected: boolean;
   handlerContainer: HTMLDivElement;
   groupId: string;
+  _pointer?: Record<IType_of_POINTER_POSITION_CODE, HTMLDivElement>;
   eventSubscriptionMap: Record<string, Rxjs.Subscription>;
 }
 
 export interface IHandlerResult {
   node: HTMLElement;
-  pointer: Record<string, HTMLDivElement>;
+  pointer: Record<IType_of_POINTER_POSITION_CODE, HTMLDivElement>;
   handlerContainer: HTMLDivElement;
   remove: () => void;
   setSelected: (selected: boolean) => IHandlerResult;
