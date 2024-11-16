@@ -1,27 +1,15 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { Handler } from "@repo/model";
+import { useRef } from "react";
+import { useCreatePermissionHandler } from "@repo/model";
 
 export default function Page(): JSX.Element {
   const itemRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (itemRef.current) {
-      const h = Handler.createPermissionHandler({
-        node: itemRef.current,
-        selected: true,
-      });
-
-      return () => {
-        h.handler.remove();
-        // dragObj.subscription.unsubscribe();
-      };
-    }
-  }, []);
+  const {setRef} = useCreatePermissionHandler();
 
   return (
     <main className="flex flex-col items-center justify-between min-h-screen p-24">
-      <div ref={itemRef} className="w-[200px] h-[200px]">
+      <div ref={setRef} className="w-[200px] h-[200px]">
         1
       </div>
     </main>
