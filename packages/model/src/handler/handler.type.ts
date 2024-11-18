@@ -60,3 +60,28 @@ export type IHandler = (
 
 export type IType_of_POINTER_POSITION_CODE =
   (typeof POINTER_POSITION_CODE)[number];
+
+export interface IDragAcross {
+  initDomLeft: number;
+  initDOmTop: number;
+  initMouseLeft: number;
+  initMouseTop: number;
+}
+
+export interface IAcross {
+  masterNode: NodeListOf<Element>;
+  masterNodeOffsetLeft: string | null;
+  masterNodeOffsetTop: string | null;
+  initMasterNodeWidth: number;
+  initMasterNodeHeight: number;
+  initMouseLeft: number;
+  initMouseTop: number;
+}
+export interface IUpdateParams {
+  across: IAcross;
+  masterNodeOffsetLeft: number;
+  offsetLeft: number;
+  masterNodeOffsetTop: number;
+  offsetTop: number;
+  position: IType_of_POINTER_POSITION_CODE;
+}
