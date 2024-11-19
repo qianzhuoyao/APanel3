@@ -1,4 +1,4 @@
-import * as DomMutationStream from "./stream";
+import * as Stream from "./stream";
 import * as Permission from "./permission";
 import * as Rxjs from "rxjs";
 import * as Uuid from "uuid";
@@ -11,4 +11,4 @@ export { createSingle } from "./single";
  * 函数 小坨风
  * 类型不动
  */
-export { DomMutationStream, Permission, Rxjs, Uuid, dayjs };
+export { Stream, Permission, Rxjs, Uuid, dayjs };

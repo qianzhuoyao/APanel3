@@ -203,14 +203,6 @@ const resizeAnchorPointerMoveEvent = ({
   const masterNodeOffsetLeft = Number(across.masterNodeOffsetLeft) || 0;
   const masterNodeOffsetTop = Number(across.masterNodeOffsetTop) || 0;
 
-  // if (offsetLeft > 0) {
-  //   if (offsetLeft - across.initMasterNodeWidth < 0) return;
-  //   if (offsetTop - across.initMasterNodeHeight < 0) return;
-  // } else {
-  //   if (offsetLeft + across.initMasterNodeWidth < 0) return;
-  //   if (offsetTop + across.initMasterNodeHeight < 0) return;
-  // }
-
   updateMasterDom({
     across,
     position,
@@ -218,12 +210,6 @@ const resizeAnchorPointerMoveEvent = ({
     offsetLeft,
     masterNodeOffsetTop,
     offsetTop,
-  });
-
-  across.masterNode.forEach((ele) => {
-    if (ele instanceof HTMLElement) {
-      recordSize(ele);
-    }
   });
 };
 
@@ -316,7 +302,9 @@ export const createDragEvent = (
             across,
             dom,
           });
-
+        }),
+        Rxjs.debounceTime(100),
+        Rxjs.tap(() => {
           recordPosition(dom);
         })
       )
@@ -407,6 +395,14 @@ export const createResizeEvent = (
               moveEvent,
               position,
               across,
+            });
+          }),
+          Rxjs.debounceTime(100),
+          Rxjs.tap(() => {
+            across.masterNode.forEach((ele) => {
+              if (ele instanceof HTMLElement) {
+                recordSize(ele);
+              }
             });
           })
         )
