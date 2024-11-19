@@ -26,6 +26,12 @@ export interface IHandlerDragEventStage {
   dragFinish: (e: MouseEvent) => void;
 }
 
+export interface IHandlerBothDragEventStage {
+  bothDragStart: (e: MouseEvent) => void;
+  bothDragRunning: (e: MouseEvent) => void;
+  bothDragFinish: (e: MouseEvent) => void;
+}
+
 export interface IHandlerResult {
   node: HTMLElement;
   handlerId: string;

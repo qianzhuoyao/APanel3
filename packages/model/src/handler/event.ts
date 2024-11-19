@@ -2,6 +2,7 @@ import { POINTER_POSITION_CODE } from "./pointer";
 import {
   IAcross,
   IDragAcross,
+  IHandlerBothDragEventStage,
   IHandlerDragEventStage,
   IHandlerResizeEventStage,
   IType_of_POINTER_POSITION_CODE,
@@ -19,14 +20,20 @@ const updateMasterDom = ({
   offsetTop,
 }: IUpdateParams) => {
   across.masterNode.forEach((ele) => {
+    console.log(across, "acrosss");
     if (ele instanceof HTMLElement) {
       switch (position) {
         case "LeftTop":
+          //必须额外考虑边界问题，例如lt节点允许向右但不能导致master移动
           moveNode(
             ele,
             [
-              masterNodeOffsetLeft + offsetLeft / 2,
-              masterNodeOffsetTop + offsetTop,
+              offsetLeft > 0 && offsetLeft >= across.initMasterNodeWidth
+                ? masterNodeOffsetLeft + across.initMasterNodeWidth / 2
+                : masterNodeOffsetLeft + offsetLeft / 2,
+              offsetTop > 0 && offsetTop >= across.initMasterNodeHeight
+                ? masterNodeOffsetTop + across.initMasterNodeHeight
+                : masterNodeOffsetTop + offsetTop,
             ],
             [
               EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
@@ -39,7 +46,12 @@ const updateMasterDom = ({
         case "LeftCenter":
           moveNode(
             ele,
-            [masterNodeOffsetLeft + offsetLeft / 2, masterNodeOffsetTop],
+            [
+              offsetLeft > 0 && offsetLeft >= across.initMasterNodeWidth
+                ? masterNodeOffsetLeft + across.initMasterNodeWidth / 2
+                : masterNodeOffsetLeft + offsetLeft / 2,
+              masterNodeOffsetTop,
+            ],
             [
               EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
               EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
@@ -50,7 +62,12 @@ const updateMasterDom = ({
         case "LeftBottom":
           moveNode(
             ele,
-            [masterNodeOffsetLeft + offsetLeft / 2, masterNodeOffsetTop],
+            [
+              offsetLeft > 0 && offsetLeft >= across.initMasterNodeWidth
+                ? masterNodeOffsetLeft + across.initMasterNodeWidth / 2
+                : masterNodeOffsetLeft + offsetLeft / 2,
+              masterNodeOffsetTop,
+            ],
             [
               EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
               EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
@@ -63,8 +80,12 @@ const updateMasterDom = ({
           moveNode(
             ele,
             [
-              masterNodeOffsetLeft + offsetLeft / 2,
-              masterNodeOffsetTop + offsetTop,
+              offsetLeft < 0 && -offsetLeft >= across.initMasterNodeWidth
+                ? masterNodeOffsetLeft - across.initMasterNodeWidth / 2
+                : masterNodeOffsetLeft + offsetLeft / 2,
+              offsetTop > 0 && offsetTop >= across.initMasterNodeHeight
+                ? masterNodeOffsetTop + across.initMasterNodeHeight
+                : masterNodeOffsetTop + offsetTop,
             ],
             [
               EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
@@ -77,7 +98,12 @@ const updateMasterDom = ({
         case "RightCenter":
           moveNode(
             ele,
-            [masterNodeOffsetLeft + offsetLeft / 2, masterNodeOffsetTop],
+            [
+              offsetLeft < 0 && -offsetLeft >= across.initMasterNodeWidth
+                ? masterNodeOffsetLeft - across.initMasterNodeWidth / 2
+                : masterNodeOffsetLeft + offsetLeft / 2,
+              masterNodeOffsetTop,
+            ],
             [
               EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
               EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
@@ -88,7 +114,12 @@ const updateMasterDom = ({
         case "RightBottom":
           moveNode(
             ele,
-            [masterNodeOffsetLeft + offsetLeft / 2, masterNodeOffsetTop],
+            [
+              offsetLeft < 0 && -offsetLeft >= across.initMasterNodeWidth
+                ? masterNodeOffsetLeft - across.initMasterNodeWidth / 2
+                : masterNodeOffsetLeft + offsetLeft / 2,
+              masterNodeOffsetTop,
+            ],
             [
               EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
               EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
@@ -101,7 +132,12 @@ const updateMasterDom = ({
         case "CenterTop":
           moveNode(
             ele,
-            [masterNodeOffsetLeft, masterNodeOffsetTop + offsetTop],
+            [
+              masterNodeOffsetLeft,
+              offsetTop > 0 && offsetTop >= across.initMasterNodeHeight
+                ? masterNodeOffsetTop + across.initMasterNodeHeight
+                : masterNodeOffsetTop + offsetTop,
+            ],
             [
               EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
               EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
@@ -129,6 +165,30 @@ const updateMasterDom = ({
   });
 };
 
+export const recordPosition = (dom: HTMLElement) => {
+  dom.setAttribute(
+    EVENT.ATTRIBUTE.RECT_LEFT,
+    dom.getBoundingClientRect().left.toString()
+  );
+
+  dom.setAttribute(
+    EVENT.ATTRIBUTE.RECT_TOP,
+    dom.getBoundingClientRect().top.toString()
+  );
+};
+
+export const recordSize = (ele: HTMLElement) => {
+  ele.setAttribute(
+    EVENT.ATTRIBUTE.RECT_WIDTH,
+    ele.getBoundingClientRect().width.toString()
+  );
+
+  ele.setAttribute(
+    EVENT.ATTRIBUTE.RECT_HEIGHT,
+    ele.getBoundingClientRect().height.toString()
+  );
+};
+
 const resizeAnchorPointerMoveEvent = ({
   moveEvent,
   across,
@@ -143,6 +203,14 @@ const resizeAnchorPointerMoveEvent = ({
   const masterNodeOffsetLeft = Number(across.masterNodeOffsetLeft) || 0;
   const masterNodeOffsetTop = Number(across.masterNodeOffsetTop) || 0;
 
+  // if (offsetLeft > 0) {
+  //   if (offsetLeft - across.initMasterNodeWidth < 0) return;
+  //   if (offsetTop - across.initMasterNodeHeight < 0) return;
+  // } else {
+  //   if (offsetLeft + across.initMasterNodeWidth < 0) return;
+  //   if (offsetTop + across.initMasterNodeHeight < 0) return;
+  // }
+
   updateMasterDom({
     across,
     position,
@@ -150,6 +218,12 @@ const resizeAnchorPointerMoveEvent = ({
     offsetLeft,
     masterNodeOffsetTop,
     offsetTop,
+  });
+
+  across.masterNode.forEach((ele) => {
+    if (ele instanceof HTMLElement) {
+      recordSize(ele);
+    }
   });
 };
 
@@ -200,6 +274,12 @@ const getDragDownInfo = ({
     initMouseTop: downEvent.clientY,
   };
 };
+
+export const createBothDragEvent = (
+  dom: HTMLElement[],
+  callback: Partial<IHandlerBothDragEventStage>
+) => {};
+
 export const createDragEvent = (
   dom: HTMLElement,
   callback: Partial<IHandlerDragEventStage>
@@ -236,6 +316,8 @@ export const createDragEvent = (
             across,
             dom,
           });
+
+          recordPosition(dom);
         })
       )
     )

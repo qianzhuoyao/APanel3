@@ -9,7 +9,12 @@ import {
 import { Permission, Rxjs, Uuid } from "@repo/lib";
 
 import { createPointers, POINTER_POSITION_CODE } from "./pointer";
-import { createDragEvent, createResizeEvent } from "./event";
+import {
+  createDragEvent,
+  createResizeEvent,
+  recordPosition,
+  recordSize,
+} from "./event";
 import { NODE, PERMISSION_ATTRIBUTE, PERMISSION_HANDLER } from "./constant.ts";
 
 /**
@@ -61,6 +66,9 @@ export const handler: IHandler = ({
   );
 
   if (selected) {
+    //初始也需要获取一次位置与大小并记录
+    recordPosition(node);
+    recordSize(node);
     handlerContainer.style.display = selected ? "block" : "none";
     handlerContainer.style.border = "1px dashed";
   }
@@ -259,7 +267,7 @@ export const createPermissionHandler = ({
   node,
 }: Pick<IHandlerParams, "selected" | "node">) => {
   const localNodePermission: ReturnType<typeof Permission.createPermission> =
-  Permission.createPermission(
+    Permission.createPermission(
       PERMISSION_HANDLER.DRAGGABLE |
         PERMISSION_HANDLER.RESIZABLE |
         PERMISSION_HANDLER.ROTATABLE
