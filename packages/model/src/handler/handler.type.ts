@@ -1,4 +1,4 @@
-import { permission, Rxjs } from "@repo/lib";
+import { Permission, Rxjs } from "@repo/lib";
 import { POINTER_POSITION_CODE } from "./pointer";
 
 export interface IHandlerParams {

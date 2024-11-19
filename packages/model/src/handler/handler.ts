@@ -6,7 +6,7 @@ import {
   IHandlerResult,
   IType_of_POINTER_POSITION_CODE,
 } from "./handler.type";
-import { permission, Rxjs, Uuid } from "@repo/lib";
+import { Permission, Rxjs, Uuid } from "@repo/lib";
 
 import { createPointers, POINTER_POSITION_CODE } from "./pointer";
 import { createDragEvent, createResizeEvent } from "./event";
@@ -258,8 +258,8 @@ export const createPermissionHandler = ({
   selected,
   node,
 }: Pick<IHandlerParams, "selected" | "node">) => {
-  const localNodePermission: ReturnType<typeof permission.createPermission> =
-    permission.createPermission(
+  const localNodePermission: ReturnType<typeof Permission.createPermission> =
+  Permission.createPermission(
       PERMISSION_HANDLER.DRAGGABLE |
         PERMISSION_HANDLER.RESIZABLE |
         PERMISSION_HANDLER.ROTATABLE
