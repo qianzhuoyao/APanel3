@@ -1,3 +1,7 @@
+import { Permission, Uuid } from "@repo/lib";
+import { IBlock } from "./block.type";
+import { BLOCK_PERMISSION } from "./constant";
+
 /**
 The purpose of the block 
 is to map the DOM elements
@@ -13,6 +17,21 @@ back to the DOM, such as modifying relationships, deleting,
 editing, or operations like adding or copying. You can even add special permissions to the nodes, 
 such as prohibiting deletion or copying.
  */
-export const block = () => {
-  return {};
+export const block: IBlock = ({ groupId ,handler,name}) => {
+  if (!groupId) {
+    throw new TypeError("groupId is undefined");
+  }
+
+  const blockPermission = Permission.createPermission(
+    BLOCK_PERMISSION.CLONEABLE |
+      BLOCK_PERMISSION.PLUGGABLE |
+      BLOCK_PERMISSION.REMOVABLE
+  );
+
+  return {
+    name,
+    groupId,
+    handler,
+    blockPermission
+  };
 };
