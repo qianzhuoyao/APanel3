@@ -3,7 +3,7 @@ import * as Permission from "./permission";
 import * as Rxjs from "rxjs";
 import * as Uuid from "uuid";
 import dayjs from "dayjs";
-import { List } from "immutable";
+import { List, Map, Set } from "immutable";
 export type { Dayjs } from "dayjs";
 export { createSingle } from "./single";
 /**
@@ -13,6 +13,8 @@ export { createSingle } from "./single";
  */
 const Immutable = {
   List,
+  Map,
+  Set,
 };
 
 export { Stream, Permission, Immutable, Rxjs, Uuid, dayjs };

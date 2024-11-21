@@ -5,6 +5,7 @@ import { IHandlerResult } from "../handler";
 export interface IBlockResult {
   groupId: string;
   name: string;
+  copyBy?: string;
   blockPermission: ReturnType<typeof Permission.createPermission>;
   handler: IHandlerResult | null;
 }
@@ -12,10 +13,11 @@ export interface IBlockResult {
 export type IBlock = (params: {
   groupId: string;
   name: string;
+  copyBy?: string;
   handler: IHandlerResult | null;
 }) => IBlockResult;
 
 export interface IGraphNode {
   parentGroupId: string | null;
-  childrenGroupId: string[];
+  childrenGroupId: Immutable.Set<string>;
 }

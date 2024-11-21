@@ -17,7 +17,7 @@ back to the DOM, such as modifying relationships, deleting,
 editing, or operations like adding or copying. You can even add special permissions to the nodes, 
 such as prohibiting deletion or copying.
  */
-export const block: IBlock = ({ groupId, handler, name }) => {
+export const block: IBlock = ({ groupId, handler, name ,copyBy}) => {
   if (!groupId) {
     throw new TypeError("groupId is undefined");
   }
@@ -33,5 +33,6 @@ export const block: IBlock = ({ groupId, handler, name }) => {
     groupId,
     handler,
     blockPermission,
+    copyBy
   };
 };

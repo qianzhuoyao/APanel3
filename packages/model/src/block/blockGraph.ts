@@ -1,11 +1,11 @@
-import { createSingle } from "@repo/lib";
+import { createSingle, Immutable } from "@repo/lib";
 import { IGraphNode } from "./block.type";
 import { GRAPH_ROOT } from "./constant";
 
 const _graph = createSingle(() => {
   const graph: Partial<Record<string, IGraphNode>> = {
     [GRAPH_ROOT]: {
-      childrenGroupId: [],
+      childrenGroupId: Immutable.Set<string>(),
       parentGroupId: null,
     },
   };
@@ -33,12 +33,10 @@ export const insertBlockGraph = (parentGroupId: string, groupId: string) => {
 
   if (parentBlockNode) {
     _graph().graph[groupId] = {
-      childrenGroupId: [],
+      childrenGroupId: Immutable.Set<string>(),
       parentGroupId: parentGroupId,
     };
-    parentBlockNode.childrenGroupId = [
-      ...new Set(...parentBlockNode.childrenGroupId, groupId),
-    ];
+    parentBlockNode.childrenGroupId.add(groupId);
   } else {
     throw new ReferenceError("parentGroupId not defined");
   }
@@ -51,9 +49,7 @@ export const appendBlockGraph = (parentGroupId: string, groupId: string) => {
   if (blockNode) {
     blockNode.parentGroupId = parentGroupId;
     if (parentBlockNode) {
-      parentBlockNode.childrenGroupId = [
-        ...new Set(...parentBlockNode.childrenGroupId, groupId),
-      ];
+      parentBlockNode.childrenGroupId.add(groupId);
     } else {
       throw new ReferenceError("parentGroupId not defined");
     }

@@ -1,9 +1,11 @@
-import { createSingle, Rxjs } from "@repo/lib";
-import { IWindowContext } from "./windowContext.type";
+import { createSingle, Immutable, Rxjs } from "@repo/lib";
+import { IBroadcastBody } from "../broadcast/broadcast.type";
 
 const windowContext = () => {
   return createSingle(() => {
-    const window: Partial<IWindowContext> = {};
+    const window = Immutable.Map({
+      broadcast: new Rxjs.Subject<IBroadcastBody>(),
+    });
     return {
       window,
     };
