@@ -16,6 +16,6 @@ export type IBlock = (params: {
 }) => IBlockResult;
 
 export interface IGraphNode {
-  parentGroupId: string;
+  parentGroupId: string | null;
   childrenGroupId: string[];
 }

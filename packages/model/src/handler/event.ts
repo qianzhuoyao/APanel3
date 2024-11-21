@@ -277,13 +277,15 @@ export const createDragEvent = (
   const observable = mouseDown$.pipe(
     Rxjs.tap((e) => {
       callback?.dragStart?.(e);
+      console.log("12312312312312-1");
     }),
-    Rxjs.map((downEvent) =>
-      getDragDownInfo({
+    Rxjs.map((downEvent) => {
+      downEvent.stopPropagation();
+      return getDragDownInfo({
         dom,
         downEvent,
-      })
-    ),
+      });
+    }),
     Rxjs.switchMap((across) =>
       mouseMove$.pipe(
         Rxjs.tap((e) => {

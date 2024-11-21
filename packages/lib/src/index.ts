@@ -3,7 +3,7 @@ import * as Permission from "./permission";
 import * as Rxjs from "rxjs";
 import * as Uuid from "uuid";
 import dayjs from "dayjs";
-
+import { List } from "immutable";
 export type { Dayjs } from "dayjs";
 export { createSingle } from "./single";
 /**
@@ -11,4 +11,8 @@ export { createSingle } from "./single";
  * 函数 小坨风
  * 类型不动
  */
-export { Stream, Permission, Rxjs, Uuid, dayjs };
+const Immutable = {
+  List,
+};
+
+export { Stream, Permission, Immutable, Rxjs, Uuid, dayjs };

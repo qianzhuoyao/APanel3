@@ -1,4 +1,4 @@
-import { Permission, Uuid } from "@repo/lib";
+import { Permission } from "@repo/lib";
 import { IBlock } from "./block.type";
 import { BLOCK_PERMISSION } from "./constant";
 
@@ -17,7 +17,7 @@ back to the DOM, such as modifying relationships, deleting,
 editing, or operations like adding or copying. You can even add special permissions to the nodes, 
 such as prohibiting deletion or copying.
  */
-export const block: IBlock = ({ groupId ,handler,name}) => {
+export const block: IBlock = ({ groupId, handler, name }) => {
   if (!groupId) {
     throw new TypeError("groupId is undefined");
   }
@@ -32,6 +32,6 @@ export const block: IBlock = ({ groupId ,handler,name}) => {
     name,
     groupId,
     handler,
-    blockPermission
+    blockPermission,
   };
 };

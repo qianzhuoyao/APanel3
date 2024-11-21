@@ -1,10 +1,20 @@
 "use client";
 
-import { useCreatePermissionHandler, PERMISSION_HANDLER } from "@repo/model";
+import {
+  useCreatePermissionHandler,
+  PERMISSION_HANDLER,
+  drawer,
+} from "@repo/model";
+import { useEffect } from "react";
 
 export default function Page(): JSX.Element {
   const Handler = useCreatePermissionHandler();
-
+  useEffect(() => {
+    const s = drawer();
+    return () => {
+      s.unsubscribe();
+    };
+  }, []);
   Handler.setHandler((h) => {
     const p = h?.handler
       .addEventListener("click", () => {

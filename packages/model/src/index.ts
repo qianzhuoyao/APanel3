@@ -4,4 +4,6 @@ import "./handler/handlerWindowClass.css";
 
 export { useCreatePermissionHandler } from "./hooks/useCreatePermissionHandler";
 
-export { Handler ,PERMISSION_HANDLER};
+export { Handler, PERMISSION_HANDLER };
+
+export { drawer } from "./paint";

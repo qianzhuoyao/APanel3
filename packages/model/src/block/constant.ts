@@ -6,3 +6,5 @@ export const BLOCK_PERMISSION = {
   //允许插入节点
   PLUGGABLE: 0b100,
 } as const;
+
+export const GRAPH_ROOT = "__ROOT__" as const;

@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      immutable:
+        specifier: ^5.0.3
+        version: 5.0.3
     devDependencies:
       prettier:
         specifier: ^3.2.5
@@ -1368,6 +1372,9 @@ packages:
   ignore@5.3.1:
     resolution: {integrity: sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==}
     engines: {node: '>= 4'}
+
+  immutable@5.0.3:
+    resolution: {integrity: sha512-P8IdPQHq3lA1xVeBRi5VPqUm5HDgKnx0Ru51wZz5mjxHr5n3RWhjIpOFU7ybkUxfB+5IToy+OLaHYDBIWsv+uw==}
 
   import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
@@ -3802,6 +3809,8 @@ snapshots:
   human-signals@4.3.1: {}
 
   ignore@5.3.1: {}
+
+  immutable@5.0.3: {}
 
   import-fresh@3.3.0:
     dependencies:
