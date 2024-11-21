@@ -18,9 +18,13 @@ export const isEventQueueEmpty = () => {
 };
 
 export const enEventQueue = (task: ITask) => {
-  return enqueue(_priorityEventQueue().eventQueue, task);
+  const queue = enqueue(_priorityEventQueue().eventQueue, task);
+  _priorityEventQueue().eventQueue = queue;
+  return queue;
 };
 
 export const deEventQueue = () => {
-  return dequeue(_priorityEventQueue().eventQueue);
+  const queue = dequeue(_priorityEventQueue().eventQueue);
+  _priorityEventQueue().eventQueue = queue[1];
+  return queue;
 };

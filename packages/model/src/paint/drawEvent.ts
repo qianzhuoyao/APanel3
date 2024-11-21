@@ -2,7 +2,7 @@ import { Rxjs, Uuid } from "@repo/lib";
 import { IDrawEvent } from "./draw.type";
 import { BODY_TAG } from "./constant";
 // [startX startY endX endY]
-const computeDrawDomSizePosition = (position: number[]) => {
+export const computeDrawDomSizePosition = (position: number[]) => {
   console.log(position, "position");
   const width = Math.abs(position[0] - position[2]);
   const height = Math.abs(position[1] - position[3]);
@@ -41,7 +41,7 @@ export const drawEvent: IDrawEvent = ({ type, panel, onDrawFinish }) => {
   const dom = findDrawDom(drawDomID);
   return mouseDown$.pipe(
     Rxjs.tap(() => {
-      console.log('12312312312312-2')
+      console.log("12312312312312-2");
     }),
     Rxjs.map((downEvent) => ({
       downLeft: downEvent.clientX,
@@ -64,12 +64,23 @@ export const drawEvent: IDrawEvent = ({ type, panel, onDrawFinish }) => {
           if (type === "rect" || type === void 0) {
             //rect
           }
-          dom.style.display = "block";
+
+          if (width > 10 && height > 10) {
+            dom.style.display = "block";
+          }
         }),
         Rxjs.takeUntil(
           mouseUp$.pipe(
             Rxjs.tap((upEvent) => {
-              onDrawFinish(dom, upEvent);
+              const rect = computeDrawDomSizePosition([
+                across.downLeft,
+                across.downTop,
+                upEvent.clientX,
+                upEvent.clientY,
+              ]);
+              if (rect.width > 10 && rect.height > 10) {
+                onDrawFinish(rect, upEvent);
+              }
               dom.style.display = "none";
             })
           )

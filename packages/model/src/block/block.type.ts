@@ -10,14 +10,20 @@ export interface IBlockResult {
   handler: IHandlerResult | null;
 }
 
-export type IBlock = (params: {
+export interface IBlockParams {
   groupId: string;
   name: string;
   copyBy?: string;
   handler: IHandlerResult | null;
-}) => IBlockResult;
+}
+
+export type IBlock = (params: IBlockParams) => IBlockResult;
 
 export interface IGraphNode {
   parentGroupId: string | null;
   childrenGroupId: Immutable.Set<string>;
+}
+
+export interface IModel {
+  block: IBlockResult;
 }

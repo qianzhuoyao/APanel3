@@ -29,8 +29,8 @@ const updateMasterDom = ({
             ele,
             [
               offsetLeft > 0 && offsetLeft >= across.initMasterNodeWidth
-                ? masterNodeOffsetLeft + across.initMasterNodeWidth / 2
-                : masterNodeOffsetLeft + offsetLeft / 2,
+                ? masterNodeOffsetLeft + across.initMasterNodeWidth
+                : masterNodeOffsetLeft + offsetLeft,
               offsetTop > 0 && offsetTop >= across.initMasterNodeHeight
                 ? masterNodeOffsetTop + across.initMasterNodeHeight
                 : masterNodeOffsetTop + offsetTop,
@@ -48,8 +48,8 @@ const updateMasterDom = ({
             ele,
             [
               offsetLeft > 0 && offsetLeft >= across.initMasterNodeWidth
-                ? masterNodeOffsetLeft + across.initMasterNodeWidth / 2
-                : masterNodeOffsetLeft + offsetLeft / 2,
+                ? masterNodeOffsetLeft + across.initMasterNodeWidth
+                : masterNodeOffsetLeft + offsetLeft,
               masterNodeOffsetTop,
             ],
             [
@@ -64,8 +64,8 @@ const updateMasterDom = ({
             ele,
             [
               offsetLeft > 0 && offsetLeft >= across.initMasterNodeWidth
-                ? masterNodeOffsetLeft + across.initMasterNodeWidth / 2
-                : masterNodeOffsetLeft + offsetLeft / 2,
+                ? masterNodeOffsetLeft + across.initMasterNodeWidth
+                : masterNodeOffsetLeft + offsetLeft,
               masterNodeOffsetTop,
             ],
             [
@@ -80,9 +80,7 @@ const updateMasterDom = ({
           moveNode(
             ele,
             [
-              offsetLeft < 0 && -offsetLeft >= across.initMasterNodeWidth
-                ? masterNodeOffsetLeft - across.initMasterNodeWidth / 2
-                : masterNodeOffsetLeft + offsetLeft / 2,
+              masterNodeOffsetLeft,
               offsetTop > 0 && offsetTop >= across.initMasterNodeHeight
                 ? masterNodeOffsetTop + across.initMasterNodeHeight
                 : masterNodeOffsetTop + offsetTop,
@@ -96,35 +94,35 @@ const updateMasterDom = ({
           ele.style.height = across.initMasterNodeHeight - offsetTop + "px";
           return 1;
         case "RightCenter":
-          moveNode(
-            ele,
-            [
-              offsetLeft < 0 && -offsetLeft >= across.initMasterNodeWidth
-                ? masterNodeOffsetLeft - across.initMasterNodeWidth / 2
-                : masterNodeOffsetLeft + offsetLeft / 2,
-              masterNodeOffsetTop,
-            ],
-            [
-              EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
-              EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
-            ]
-          );
+          // moveNode(
+          //   ele,
+          //   [
+          //     offsetLeft < 0 && -offsetLeft >= across.initMasterNodeWidth
+          //       ? masterNodeOffsetLeft - across.initMasterNodeWidth/2
+          //       : masterNodeOffsetLeft + offsetLeft,
+          //     masterNodeOffsetTop,
+          //   ],
+          //   [
+          //     EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
+          //     EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
+          //   ]
+          // );
           ele.style.width = across.initMasterNodeWidth + offsetLeft + "px";
           return 1;
         case "RightBottom":
-          moveNode(
-            ele,
-            [
-              offsetLeft < 0 && -offsetLeft >= across.initMasterNodeWidth
-                ? masterNodeOffsetLeft - across.initMasterNodeWidth / 2
-                : masterNodeOffsetLeft + offsetLeft / 2,
-              masterNodeOffsetTop,
-            ],
-            [
-              EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
-              EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
-            ]
-          );
+          // moveNode(
+          //   ele,
+          //   [
+          //     offsetLeft < 0 && -offsetLeft >= across.initMasterNodeWidth
+          //       ? masterNodeOffsetLeft - across.initMasterNodeWidth
+          //       : masterNodeOffsetLeft + offsetLeft,
+          //     masterNodeOffsetTop,
+          //   ],
+          //   [
+          //     EVENT.ATTRIBUTE.ACT_POSITION_VALUE_LEFT,
+          //     EVENT.ATTRIBUTE.ACT_POSITION_VALUE_TOP,
+          //   ]
+          // );
 
           ele.style.width = across.initMasterNodeWidth + offsetLeft + "px";
           ele.style.height = across.initMasterNodeHeight + offsetTop + "px";

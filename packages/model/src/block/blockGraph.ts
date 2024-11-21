@@ -36,7 +36,8 @@ export const insertBlockGraph = (parentGroupId: string, groupId: string) => {
       childrenGroupId: Immutable.Set<string>(),
       parentGroupId: parentGroupId,
     };
-    parentBlockNode.childrenGroupId.add(groupId);
+    parentBlockNode.childrenGroupId =
+      parentBlockNode.childrenGroupId.add(groupId);
   } else {
     throw new ReferenceError("parentGroupId not defined");
   }
@@ -49,7 +50,8 @@ export const appendBlockGraph = (parentGroupId: string, groupId: string) => {
   if (blockNode) {
     blockNode.parentGroupId = parentGroupId;
     if (parentBlockNode) {
-      parentBlockNode.childrenGroupId.add(groupId);
+      parentBlockNode.childrenGroupId =
+        parentBlockNode.childrenGroupId.add(groupId);
     } else {
       throw new ReferenceError("parentGroupId not defined");
     }

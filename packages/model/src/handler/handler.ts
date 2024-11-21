@@ -53,27 +53,19 @@ export const handler: IHandler = ({
   const handlerId = Uuid.v4();
 
   const clearEvent = () => {
+    console.log(handlerId, "handlerId-3");
     Object.keys(eventSubscriptionMap).forEach((eventName) => {
       eventSubscriptionMap[eventName]?.unsubscribe();
     });
   };
-  //优先清理事件，确保唯一
-  clearEvent();
+
   //给元素增加权限信息
   node.setAttribute(
     PERMISSION_ATTRIBUTE.DATA_ELEMENT_ATTRIBUTE_KEY,
     nodePermission.toString()
   );
 
-  if (selected) {
-    //初始也需要获取一次位置与大小并记录
-    recordPosition(node);
-    recordSize(node);
-    handlerContainer.style.display = selected ? "block" : "none";
-    handlerContainer.style.border = "1px dashed";
-  }
-
-  node.style.position = "relative";
+  node.style.position = "absolute";
 
   //给元素增加分组信息
   node.setAttribute(NODE.ROLE.GROUP_MASTER_KEY, groupId);
@@ -81,6 +73,11 @@ export const handler: IHandler = ({
   const pointer = _pointer || createPointers(handlerContainer, groupId);
 
   node.appendChild(handlerContainer);
+
+  handlerContainer.style.display = selected ? "block" : "none";
+  handlerContainer.style.border = selected ? "1px dashed" : "none";
+  recordPosition(node);
+  recordSize(node);
 
   const remove = () => {
     clearEvent();
@@ -149,11 +146,12 @@ export const handler: IHandler = ({
       [eventName]: cb,
     });
   };
-
+  console.log(eventSubscriptionMap, "eventSubscriptionMap");
   const addEventListener = (
     eventName: string,
     eventCallback: (evt: Event) => void
   ) => {
+    console.log(handlerId, "handlerId-0");
     eventSubscriptionMap[eventName] = Rxjs.fromEvent(node, eventName).subscribe(
       eventCallback
     );
@@ -248,8 +246,11 @@ export const createHandler = ({
   selected,
   node,
   nodePermission,
-}: Pick<IHandlerParams, "selected" | "node" | "nodePermission">) => {
-  const groupId = Uuid.v4();
+  groupId,
+}: Pick<
+  IHandlerParams,
+  "selected" | "node" | "nodePermission" | "groupId"
+>) => {
   const handlerContainer = document.createElement("div");
 
   return handler({
@@ -265,7 +266,9 @@ export const createHandler = ({
 export const createPermissionHandler = ({
   selected,
   node,
-}: Pick<IHandlerParams, "selected" | "node">) => {
+  groupId,
+}: Pick<IHandlerParams, "selected" | "node"> & { groupId?: string }) => {
+  const _groupId = groupId || Uuid.v4();
   const localNodePermission: ReturnType<typeof Permission.createPermission> =
     Permission.createPermission(
       PERMISSION_HANDLER.DRAGGABLE |
@@ -275,6 +278,7 @@ export const createPermissionHandler = ({
   const handler = createHandler({
     nodePermission: localNodePermission.getPermission(),
     node,
+    groupId: _groupId,
     selected,
   });
 
