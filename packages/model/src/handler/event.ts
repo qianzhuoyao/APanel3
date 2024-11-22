@@ -160,6 +160,7 @@ const updateMasterDom = ({
           throw new ReferenceError("锚点不存在");
       }
     }
+    throw new ReferenceError("查询不到master");
   });
 };
 
