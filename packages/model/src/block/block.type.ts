@@ -12,6 +12,7 @@ export interface IBlockResult {
 
 export interface IBlockParams {
   groupId: string;
+  blockConfig: IBlockConfigResult;
   name: string;
   copyBy?: string;
   handler: IHandlerResult | null;
@@ -27,3 +28,14 @@ export interface IGraphNode {
 export interface IModel {
   block: IBlockResult;
 }
+
+export interface IBlockConfigParams {
+  type: string;
+  pack: any;
+}
+export interface IBlockConfigResult {
+  type: string;
+  pack: any;
+}
+
+export type IBlockConfig = (params?: IBlockConfigParams) => IBlockConfigResult;

@@ -2,6 +2,7 @@ import { createSingle, Immutable } from "@repo/lib";
 import { IBlockParams, IModel } from "./block.type";
 import { createBlock } from "./blockAttr";
 import { createPermissionHandler } from "../handler";
+import { createBlockConfig } from "./blockConfig";
 
 const _modal = createSingle(() => {
   return {
@@ -26,7 +27,8 @@ export const addModel = (
     selected: true,
     groupId: params.groupId,
   });
-  const block = createBlock({ ...params, handler });
+  const config = createBlockConfig();
+  const block = createBlock({ ...params, handler, blockConfig: config });
 
   _modal().model = _modal().model.set(params.groupId, {
     block,

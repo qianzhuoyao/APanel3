@@ -3,6 +3,7 @@ import { IBlock } from "./block.type";
 import { BLOCK_PERMISSION } from "./constant";
 
 /**
+ * _struct
 The purpose of the block 
 is to map the DOM elements
 on the window into a tree-like  
@@ -17,7 +18,13 @@ back to the DOM, such as modifying relationships, deleting,
 editing, or operations like adding or copying. You can even add special permissions to the nodes, 
 such as prohibiting deletion or copying.
  */
-export const createBlock: IBlock = ({ groupId, handler, name ,copyBy}) => {
+export const createBlock: IBlock = ({
+  groupId,
+  handler,
+  name,
+  copyBy,
+  blockConfig,
+}) => {
   if (!groupId) {
     throw new TypeError("groupId is undefined");
   }
@@ -33,6 +40,7 @@ export const createBlock: IBlock = ({ groupId, handler, name ,copyBy}) => {
     groupId,
     handler,
     blockPermission,
-    copyBy
+    blockConfig,
+    copyBy,
   };
 };
