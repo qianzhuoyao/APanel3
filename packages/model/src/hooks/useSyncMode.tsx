@@ -17,10 +17,7 @@ export const useSyncMode = () => {
           name,
           groupId,
         });
-        console.log(h, "dasdasdasdasd");
-        console.log(h.handler?.handlerId,'handlerId-1')
         latest = h.handler?.addEventListener("click", () => {
-          console.log("dooo");
           latest = latest?.setSelected(true);
         });
       }
