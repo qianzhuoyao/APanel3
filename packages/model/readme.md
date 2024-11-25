@@ -6,6 +6,8 @@
     {
       "type": "chart",
       "name": "chart_name",
+      "parentGroupId": "parentId_xxx_xxx_xxx",
+      "childrenGroupId": ["child_1_xxx", "child_2_xxx"],
       "groupId": "id_xxx_xxx_xxx",
       "configPack": {}, //一些的负责渲染的配置，不是数据，数据来源是任务
       "interval": 2000, //每次都会重新走一遍节点流程即eventTask自动执行的任务
@@ -15,19 +17,17 @@
       "masterPermission": 10,
       //该组件的事件优先级为1，例如涉及手动批量更新组件时优级为1，这个不对任务负责，
       "eventPriority": 1,
-      "subscription": [
-        {
-          //订阅触发
-          "taskName": [
-            [
-              {
-                "condition": "conditionALert", //本订阅的执行条件，不满足条件需要记录到log
-                "fnName": "alert name"//任务函数错误直接结束并记录log
-              }
-            ]
+      "subscription": {
+        //订阅触发
+        "taskName": [
+          [
+            {
+              "condition": "conditionALert", //本订阅的执行条件，不满足条件需要记录到log
+              "fnName": "alert name" //任务函数错误直接结束并记录log
+            }
           ]
-        }
-      ],
+        ]
+      },
       "eventTask": [
         {
           //顺序为call ->send

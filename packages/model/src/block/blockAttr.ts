@@ -23,7 +23,8 @@ export const createBlock: IBlock = ({
   handler,
   name,
   copyBy,
-  blockConfig,
+  interval,
+  eventPriority,
 }) => {
   if (!groupId) {
     throw new TypeError("groupId is undefined");
@@ -35,12 +36,15 @@ export const createBlock: IBlock = ({
       BLOCK_PERMISSION.REMOVABLE
   );
 
+  const _eventPriority = eventPriority || 1;
+
   return {
     name,
     groupId,
     handler,
     blockPermission,
-    blockConfig,
     copyBy,
+    interval,
+    eventPriority: _eventPriority,
   };
 };

@@ -8,14 +8,17 @@ export interface IBlockResult {
   copyBy?: string;
   blockPermission: ReturnType<typeof Permission.createPermission>;
   handler: IHandlerResult | null;
+  interval?: number;
+  eventPriority?: number;
 }
 
 export interface IBlockParams {
   groupId: string;
-  blockConfig: IBlockConfigResult;
   name: string;
   copyBy?: string;
   handler: IHandlerResult | null;
+  interval?: number;
+  eventPriority?: number;
 }
 
 export type IBlock = (params: IBlockParams) => IBlockResult;
@@ -25,8 +28,32 @@ export interface IGraphNode {
   childrenGroupId: Immutable.Set<string>;
 }
 
+export interface ITaskStruct {
+  condition: string;
+  fnName: string;
+  runTimes: number;
+  repeatTime: number;
+}
+
+export type IBlockSubscription = Pick<ITaskStruct, "condition" | "fnName">;
+
+export interface IEventTask {
+  eventName: string;
+  isCatch: boolean;
+  conditionCall: string;
+  send: Pick<ITaskStruct, "runTimes" | "repeatTime" | "fnName">[][];
+  call: Pick<ITaskStruct, "runTimes" | "fnName">[][];
+}
+
+export type IBlockSubscriptionBuilder = () => string;
+
+export type IBlockEventTask = () => string;
+
 export interface IModel {
   block: IBlockResult;
+  eventTask: string;
+  config: string;
+  subscription: string;
 }
 
 export interface IBlockConfigParams {
@@ -38,4 +65,4 @@ export interface IBlockConfigResult {
   pack: any;
 }
 
-export type IBlockConfig = (params?: IBlockConfigParams) => IBlockConfigResult;
+export type IBlockConfig = (params?: IBlockConfigParams) => string;

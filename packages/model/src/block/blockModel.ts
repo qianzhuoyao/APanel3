@@ -3,6 +3,8 @@ import { IBlockParams, IModel } from "./block.type";
 import { createBlock } from "./blockAttr";
 import { createPermissionHandler } from "../handler";
 import { createBlockConfig } from "./blockConfig";
+import { createBlockSubscription } from "./blockSubscription";
+import { createBlockEventTask } from "./blockEventTask";
 
 const _modal = createSingle(() => {
   return {
@@ -27,11 +29,17 @@ export const addModel = (
     selected: true,
     groupId: params.groupId,
   });
+  //生成对应的键
   const config = createBlockConfig();
-  const block = createBlock({ ...params, handler, blockConfig: config });
+  const subscription = createBlockSubscription();
+  const eventTask = createBlockEventTask();
+  const block = createBlock({ ...params, handler });
 
   _modal().model = _modal().model.set(params.groupId, {
     block,
+    config,
+    subscription,
+    eventTask,
   });
 
   return block;

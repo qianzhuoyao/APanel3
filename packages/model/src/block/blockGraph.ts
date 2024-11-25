@@ -21,7 +21,7 @@ export const getBlockGraph = () => {
 //插入节点
 export const insertBlockGraph = (parentGroupId: string, groupId: string) => {
   if (!groupId) {
-    throw new ReferenceError("groupId not defined");
+    throw new ReferenceError("groupId is not defined");
   }
 
   const blockNode = _graph().graph[groupId];
