@@ -1,6 +1,7 @@
 import { createPermission } from "./../../../lib/src/permission/permission";
 import { Permission } from "@repo/lib";
 import { IHandlerResult } from "../handler";
+import { IBlockTrigger } from "../trigger/trigger.type";
 
 export interface IBlockResult {
   groupId: string;
@@ -28,24 +29,14 @@ export interface IGraphNode {
   childrenGroupId: Immutable.Set<string>;
 }
 
-export interface ITaskStruct {
-  condition: string;
-  fnName: string;
-  runTimes: number;
-  repeatTime: number;
-}
-
-export type IBlockSubscription = Pick<ITaskStruct, "condition" | "fnName">;
-
-export interface IEventTask {
-  eventName: string;
-  isCatch: boolean;
-  conditionCall: string;
-  send: Pick<ITaskStruct, "runTimes" | "repeatTime" | "fnName">[][];
-  call: Pick<ITaskStruct, "runTimes" | "fnName">[][];
-}
-
-export type IBlockSubscriptionBuilder = () => string;
+export type IBlockSubscriptionBuilder = () => {
+  getSubscriptionMap: () => Immutable.Map<string, IBlockTrigger>;
+  setSubscriptionMap: (
+    changeFunc: (
+      map: Immutable.Map<string, IBlockTrigger>
+    ) => Immutable.Map<string, IBlockTrigger>
+  ) => void;
+};
 
 export type IBlockEventTask = () => string;
 
@@ -53,7 +44,7 @@ export interface IModel {
   block: IBlockResult;
   eventTask: string;
   config: string;
-  subscription: string;
+  subscription: ReturnType<IBlockSubscriptionBuilder>;
 }
 
 export interface IBlockConfigParams {

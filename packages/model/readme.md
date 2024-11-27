@@ -19,19 +19,19 @@
       "eventPriority": 1,
       "subscription": {
         //订阅触发
-        "taskName": [
-          [
-            {
-              "condition": "conditionALert", //本订阅的执行条件，不满足条件需要记录到log
-              "fnName": "alert name" //任务函数错误直接结束并记录log
-            }
-          ]
+        "subscriptionName": [
+          {
+            "name": "订阅1",
+            "priority": 1,
+            "executeCondition": "conditionALert", //本订阅的执行条件，不满足条件需要记录到log
+            "executeName": "alert name" //任务函数错误直接结束并记录log
+          }
         ]
       },
       "eventTask": [
         {
-          //顺序为call ->send
-          "eventName": "click", //点击主动触发,不写就默认按照执行规则触发call和send
+          //顺序为call ->execute
+          "eventName": "clickName", //点击主动触发,不写就默认按照执行规则触发call和execute
           "isCatch": true,
           //所有二维数组的返回值都会被维护在组件内的一个值
           //如果执行[['a','a1'],['b'],['f']] 不传times则默认一次
@@ -46,22 +46,26 @@
           //[{a:xxx,a1:yyy},{b:xxxx}]
           //所以允许反复执行，例如[['a'],['a']]，如果同级别任务名称重复，则返回记录值会覆盖先到的数据，会存在问题，所以会禁止并报错
           "call": [
-            [
-              {
-                "runTimes": 1, //本任务执行次数,正整数，负数不执行，浮点向上取整
-                "fnName": "task1" //如果错误直接就结束
-              }
-            ]
+            //这是一个优先队列
+            {
+              "name": "自执行订阅1",
+              "priority": 1,
+              "executeCondition": "condition1", // 任务开始执行条件
+              "runTimes": 1, //本任务执行次数,正整数，负数不执行，浮点向上取整
+              "executeName": "task1" //如果错误直接就结束
+            }
           ], //任务编号,[[优先级最高，merge执行不分先后同时执行],[第一个全部执行且执行成功后执行]]，遇到错误根据isCatch可以被捕获
-          "conditionCall": "condition1", // 任务开始执行条件
-          "send": [
-            [
-              {
-                "runTimes": 1,
-                "repeatTime": 10, //如果不满足订阅执行条件之一被拒绝就会触发重试，不写或者0都表示不重试，重试不消费runTimes，runTimes表示的是成功后，如果runTimes是2第一次成功第二次失败就会触发10次重试，如果订阅任务复杂，可能存在多个订阅有一些执行了但是后面拒绝了，触发重试是从拒绝的那个函数还是继续而不是重头开始，直到完整结束消费一次runTimes。但是如果订阅函数抛出错误则直接结束，本次推送失败并记录log
-                "fnName": "alert name"
-              }
-            ]
+
+          "execute": [
+            //这是一个优先队列
+            {
+              "name": "订阅1",
+              "priority": 1,
+              "runTimes": 1,
+              "executeCondition": "condition1", // 任务开始执
+              "repeatTime": 10, //如果不满足订阅执行条件之一被拒绝就会触发重试，不写或者0都表示不重试，重试不消费runTimes，runTimes表示的是成功后，如果runTimes是2第一次成功第二次失败就会触发10次重试，如果订阅任务复杂，可能存在多个订阅有一些执行了但是后面拒绝了，触发重试是从拒绝的那个函数还是继续而不是重头开始，直到完整结束消费一次runTimes。但是如果订阅函数抛出错误则直接结束，本次推送失败并记录log
+              "executeName": "alert name"
+            }
           ] //任务编号,[[优先级最高，merge执行不分先后同时执行],[第一个全部执行且执行成功后执行]]，遇到错误根据isCatch可以被捕获
         }
       ]
