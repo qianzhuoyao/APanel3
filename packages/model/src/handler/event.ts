@@ -1,5 +1,5 @@
 import { POINTER_POSITION_CODE } from "./pointer";
-import {
+import type {
   IAcross,
   IDragAcross,
   IHandlerBothDragEventStage,
