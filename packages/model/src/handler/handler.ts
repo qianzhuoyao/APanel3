@@ -1,4 +1,4 @@
-import {
+import type {
   IHandler,
   IHandlerDragEventStage,
   IHandlerParams,
