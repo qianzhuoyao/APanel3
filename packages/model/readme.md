@@ -1,15 +1,32 @@
 通过handler来让dom可以移动与resize
 
+```js
+/**
+ *             循环  判断        赋值  计算     函数  结束 是基本计算逻辑
+ * executeName loop  condition toBe  compute fn   return
+ *
+ * 循环允许次数（有限或者无限）遇到return 结束
+ *
+ * 
+ * 
+ */
+```
+
 ```json
 {
   "blocks": [
     {
-      "type": "chart",
       "name": "chart_name",
       "parentGroupId": "parentId_xxx_xxx_xxx",
       "childrenGroupId": ["child_1_xxx", "child_2_xxx"],
       "groupId": "id_xxx_xxx_xxx",
-      "configPack": {}, //一些的负责渲染的配置，不是数据，数据来源是任务
+      "configDrawPack": {
+        "containerType": "rect", // figma里的形状
+        "CoordinateSystem": [12, 33],
+        "relativeCoordinate": [10, 10], //基于坐标系的相对位置
+        "size": [100, 100]
+      }, //一些的负责渲染的配置，不是数据，数据来源是任务
+      "anchor": {}, //形变锚点
       "interval": 2000, //每次都会重新走一遍节点流程即eventTask自动执行的任务
       //handler的权限
       "handlerPermission": 10,
@@ -79,7 +96,6 @@
   ]
 }
 ```
-
 
 事件通过发布订阅做
 注册函数集functions

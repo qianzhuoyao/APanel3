@@ -4,8 +4,9 @@ import {
   IBlockConfigParams,
   IBlockConfigResult,
 } from "./block.type";
+import { _UNDEFINED_CONFIG_TYPE } from "./constant";
 
-const _UNDEFINED_CONFIG_TYPE = "_UNDEFINED_CONFIG_TYPE";
+
 
 const _Config = createSingle(() => {
   const config = Immutable.Map<string, IBlockConfigResult>();

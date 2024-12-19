@@ -1,5 +1,5 @@
 import { Permission } from "@repo/lib";
-import { IBlock } from "./block.type";
+import type { IBlock } from "./block.type";
 import { BLOCK_PERMISSION } from "./constant";
 
 /**

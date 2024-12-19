@@ -8,3 +8,5 @@ export const BLOCK_PERMISSION = {
 } as const;
 
 export const GRAPH_ROOT = "__ROOT__" as const;
+
+export const _UNDEFINED_CONFIG_TYPE = "_UNDEFINED_CONFIG_TYPE";
