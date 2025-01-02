@@ -26,3 +26,4 @@ export const useSyncMode = () => {
 
   return setRef;
 };
+

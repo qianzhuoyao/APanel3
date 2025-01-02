@@ -7,33 +7,26 @@
  *
  * 循环允许次数（有限或者无限）遇到return 结束
  *
- * 
- * 
+ * 感觉要拆分
  */
 ```
 
 ```json
+
 {
-  "blocks": [
+    "definedExecute": [
     {
-      "name": "chart_name",
-      "parentGroupId": "parentId_xxx_xxx_xxx",
-      "childrenGroupId": ["child_1_xxx", "child_2_xxx"],
-      "groupId": "id_xxx_xxx_xxx",
-      "configDrawPack": {
-        "containerType": "rect", // figma里的形状
-        "CoordinateSystem": [12, 33],
-        "relativeCoordinate": [10, 10], //基于坐标系的相对位置
-        "size": [100, 100]
-      }, //一些的负责渲染的配置，不是数据，数据来源是任务
-      "anchor": {}, //形变锚点
-      "interval": 2000, //每次都会重新走一遍节点流程即eventTask自动执行的任务
-      //handler的权限
-      "handlerPermission": 10,
-      //节点block的权限
-      "masterPermission": 10,
-      //该组件的事件优先级为1，例如涉及手动批量更新组件时优级为1，这个不对任务负责，
-      "eventPriority": 1,
+      "fnName": "alert name",
+      "fn": "function (){xxx}"
+    }
+  ],
+  "logics":[
+    {
+     "name": "chart_name",
+     "id":"xxxxx",
+      //该组件的事件优先级为1，例如涉及更新组件时优级为1，这个不对任务负责，
+      "updatePriority": 1,
+     "interval": 2000, //每次都会重新走一遍节点流程即eventTask自动执行的任务
       "subscription": {
         //订阅触发
         "subscriptionName": [
@@ -87,13 +80,33 @@
         }
       ]
     }
-  ],
-  "customFn": [
-    {
-      "fnName": "alert name",
-      "fn": "function (){xxx}"
-    }
   ]
+}
+
+
+{
+  "blocks": [
+    {
+      "name": "chart_name",
+      "parentGroupId": "parentId_xxx_xxx_xxx",
+      "childrenGroupId": ["child_1_xxx", "child_2_xxx"],
+      "groupId": "id_xxx_xxx_xxx",
+      "configDrawPack": {
+        "containerType": "rect", // figma里的形状
+        "relativeCoordinate": [10, 10], //基于坐标系的相对位置
+        "size": [100, 100],
+        "anchor": {}, //形变锚点 待确定的数据，实际上锚点可以记录偏移量与角度或者索性不存在
+      }, //一些的负责渲染的配置，不是数据，数据来源是任务
+
+      //handler的权限
+      "handlerPermission": 10,
+      //节点block的权限
+      "masterPermission": 10,
+
+
+    }
+  ],
+
 }
 ```
 
