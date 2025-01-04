@@ -1,7 +1,7 @@
 import { Permission } from "@repo/lib";
 import { IHandlerResult } from "../handler";
 import { IBlockTrigger } from "../trigger/trigger.type";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 
 export interface IBlockResult {
   groupId: string;

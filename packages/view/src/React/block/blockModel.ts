@@ -5,7 +5,7 @@ import { createPermissionHandler } from "../handler";
 import { createBlockConfig } from "./blockConfig";
 import { createBlockSubscription } from "./blockSubscription";
 import { createBlockEventTask } from "./blockEventTask";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 
 const _modal = createSingle(() => {
   return {

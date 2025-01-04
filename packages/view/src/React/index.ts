@@ -1,4 +1,5 @@
 import * as Handler from "./handler";
+import "./styles.css";
 import { PERMISSION_HANDLER } from "./handler";
 import "./handler/handlerWindowClass.css";
 import * as Block from "./block";

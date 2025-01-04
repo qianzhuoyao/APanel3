@@ -1,7 +1,7 @@
 
 import { IBlockTrigger } from "../trigger/trigger.type";
 import { IBlockSubscriptionBuilder } from "./block.type";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 //方便追踪变更才放在一起
 export const createBlockSubscription: IBlockSubscriptionBuilder = () => {
   let subscriptionMap = Immutable.Map<string, IBlockTrigger>();

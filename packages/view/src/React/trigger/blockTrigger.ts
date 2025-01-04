@@ -1,5 +1,5 @@
 import { createSingle } from "@repo/lib";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 import { ITask } from "../event/queue.type";
 import {
   createPriorityQueue,

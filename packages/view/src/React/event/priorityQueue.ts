@@ -1,4 +1,4 @@
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 import { PriorityQueue } from "./queue.type";
 
 // 创建一个空的优先队列

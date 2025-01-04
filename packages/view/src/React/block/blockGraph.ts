@@ -1,7 +1,7 @@
 import { createSingle } from "@repo/lib";
 import { IGraphNode } from "./block.type";
 import { GRAPH_ROOT } from "./constant";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 
 const _graph = createSingle(() => {
   const graph: Partial<Record<string, IGraphNode>> = {

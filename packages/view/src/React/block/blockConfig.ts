@@ -5,7 +5,7 @@ import {
   IBlockConfigResult,
 } from "./block.type";
 import { _UNDEFINED_CONFIG_TYPE } from "./constant";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 import * as Uuid from "uuid";
 
 const _Config = createSingle(() => {
