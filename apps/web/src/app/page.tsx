@@ -1,6 +1,6 @@
 "use client";
 
-import { Provider } from "@repo/model";
+import { Provider } from "@repo/view/React";
 
 export default function Page(): JSX.Element {
   return (
