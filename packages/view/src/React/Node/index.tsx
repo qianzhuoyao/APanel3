@@ -161,46 +161,46 @@ export const Node = memo(
      * 鼠标抬起
      * 放外边去，通过树选择来绘制对应位置
      */
-    // useEffect(() => {
-    //   const mouseUpSubscription = sceneMouseUp().observable.subscribe((e) => {
-    //     dispatch(setIsSelecting(false));
-    //     console.log(e, isSelecting, "ssssss");
-    //     if (e.target instanceof HTMLElement) {
-    //       const currentNode = nodeMap().get(
-    //         e.target?.getAttribute("data-id") || ""
-    //       );
-    //       const rootNode = nodeMap().get(root.id);
-    //       if (currentNode && rootNode) {
-    //         // 创建节点
-    //         createNode({
-    //           parent: currentNode,
-    //           type: "NODE",
-    //           name: "Node",
-    //           x: selectionLeft,
-    //           y: selectionTop,
-    //           width: selectionWidth,
-    //           height: selectionHeight,
-    //         });
-    //         // 更新根节点
-    //         const newRoot = translateRoot(rootNode);
-    //         console.log(newRoot, rootNode, "newRootsss");
-    //         dispatch(setRoot(newRoot));
-    //       }
-    //     }
-    //     dispatch(setSelectionStart(null));
-    //     dispatch(setSelectionEnd(null));
-    //   });
+    useEffect(() => {
+      const mouseUpSubscription = sceneMouseUp().observable.subscribe((e) => {
+        dispatch(setIsSelecting(false));
+        // console.log(e, isSelecting, "ssssss");
+        // if (e.target instanceof HTMLElement) {
+        //   const currentNode = nodeMap().get(
+        //     e.target?.getAttribute("data-id") || ""
+        //   );
+        //   const rootNode = nodeMap().get(root.id);
+        //   if (currentNode && rootNode) {
+        //     // 创建节点
+        //     createNode({
+        //       parent: currentNode,
+        //       type: "NODE",
+        //       name: "Node",
+        //       x: selectionLeft,
+        //       y: selectionTop,
+        //       width: selectionWidth,
+        //       height: selectionHeight,
+        //     });
+        //     // 更新根节点
+        //     const newRoot = translateRoot(rootNode);
+        //     console.log(newRoot, rootNode, "newRootsss");
+        //     dispatch(setRoot(newRoot));
+        //   }
+        // }
+        dispatch(setSelectionStart(null));
+        dispatch(setSelectionEnd(null));
+      });
 
-    //   return () => {
-    //     mouseUpSubscription.unsubscribe();
-    //   };
-    // }, [
-    //   isSelecting,
-    //   selectionLeft,
-    //   selectionTop,
-    //   selectionWidth,
-    //   selectionHeight,
-    // ]);
+      return () => {
+        mouseUpSubscription.unsubscribe();
+      };
+    }, [
+      isSelecting,
+      selectionLeft,
+      selectionTop,
+      selectionWidth,
+      selectionHeight,
+    ]);
 
     const isVisible = useMemo(() => {
       const top = content?.y || 0;
