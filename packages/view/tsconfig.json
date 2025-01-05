@@ -1,5 +1,5 @@
 {
   "extends": "@repo/typescript-config/react-library.json",
-  "include": [".", "src/React/hooks"],
+  "include": [".", "src/React/hooks", "../model/src/NodeModel/nodeMap.ts"],
   "exclude": ["dist", "build", "node_modules"]
 }

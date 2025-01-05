@@ -6,11 +6,14 @@
     "build": "tsc"
   },
   "exports": {
-    "default": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./NodeModel": "./src/NodeModel/index.ts",
+    "./NodeModel/type": "./src/NodeModel/type.ts"
   },
   "peerDependencies": {
     "react": "^18.2.0",
     "clsx": "^2.1.1",
+    "uuid": "^11.0.2",
     "@repo/lib": "workspace:*"
   },
   "devDependencies": {
