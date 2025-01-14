@@ -5,14 +5,16 @@ import {
   CSSProperties,
   useState,
   useMemo,
+  RefCallback,
 } from "react";
 import { Node } from "../Node";
 import { useDispatch, useSelector } from "react-redux";
 import { createNode } from "@repo/model/NodeModel";
-import { setRoot } from "./sceneStore";
+import { setRoot } from "../Store/sceneStore";
 import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
 import { translateRoot } from "./translate";
-import { INodeContent } from "./type";
+import { INodeContent, ISceneProp } from "./type";
+import cn from "clsx";
 
 /**
  * 场景容器
@@ -20,11 +22,7 @@ import { INodeContent } from "./type";
  * @param height
  * @returns
  */
-export const SceneContainer = ({
-  style,
-}: {
-  style: CSSProperties | undefined;
-}) => {
+export const SceneContainer = ({ style, className }: ISceneProp) => {
   const selectionRef = useRef<HTMLDivElement>(null);
 
   const selectionStart = useSelector(
@@ -87,8 +85,19 @@ export const SceneContainer = ({
       };
     }) => state.scene.root
   );
+
   const dispatch = useDispatch();
-  const containerRef = useRef<HTMLDivElement>(null);
+  /**
+   * size是根据style来显示的，此ref仅仅记录大小用于计算
+   */
+  const sizeRef = useRef({ width: 0, height: 0 });
+
+  const containerRef: RefCallback<HTMLDivElement> = (node) => {
+    const rect = node?.getBoundingClientRect();
+    if (rect) {
+      sizeRef.current = { width: rect.width, height: rect.height };
+    }
+  };
 
   /**
    * 拖拽结束
@@ -108,8 +117,8 @@ export const SceneContainer = ({
       name: "Root",
       x: 0,
       y: 0,
-      width: parseFloat(String(style?.width)) || 0,
-      height: parseFloat(String(style?.height)) || 0,
+      width: sizeRef.current.width,
+      height: sizeRef.current.height,
     });
     dispatch(setRoot(translateRoot(Root.node)));
   }, [style]);
@@ -130,35 +139,23 @@ export const SceneContainer = ({
   return (
     <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <div
+        /**
+         * 实际上 允许 style 来变更 容器 position
+         */
+        className={cn(className, "relative")}
         style={{
           ...style,
-          position: "relative",
         }}
         ref={containerRef}
       >
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-            {JSON.stringify(selectionEnd)}
-            {JSON.stringify(selectionStart)}
+        <div className="w-full h-full overflow-hidden relative">
           {(selectionWidth || selectionHeight) && isSelecting ? (
-            <div ref={selectionRef} style={selectionStyle}>
-            
-            </div>
+            <div ref={selectionRef} style={selectionStyle}></div>
           ) : null}
           <Node
             content={root}
-            viewportWidth={
-              containerRef.current?.getBoundingClientRect().width || 0
-            }
-            viewportHeight={
-              containerRef.current?.getBoundingClientRect().height || 0
-            }
+            viewportWidth={sizeRef.current.width}
+            viewportHeight={sizeRef.current.height}
           ></Node>
         </div>
       </div>

@@ -7,7 +7,7 @@ import {
   setRoot,
   setSelectionEnd,
   setSelectionStart,
-} from "../Scene/sceneStore";
+} from "../Store/sceneStore";
 import { translateRoot } from "../Scene/translate";
 import { INodeContent } from "../Scene/type";
 import { sceneMouseMove, sceneMouseUp } from "../Scene/sceneEvent";

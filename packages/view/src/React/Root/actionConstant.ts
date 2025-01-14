@@ -1,0 +1,12 @@
+export const ACTION_MODE = {
+  MOUSE: "MOUSE",
+  RECT: "RECT",
+  TEXT: "TEXT",
+  IMAGE: "IMAGE",
+  IFRAME: "IFRAME",
+  LINE: "LINE",
+  TRIANGLE: "TRIANGLE",
+  CIRCLE: "CIRCLE",
+  RHOMBUS: "RHOMBUS",
+  HAND: "HAND",
+} as const;

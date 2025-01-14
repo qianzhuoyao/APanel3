@@ -1,13 +1,10 @@
 "use client";
-
-import { Scene } from "@repo/view/React";
+import { ReactView } from "@repo/view";
 
 export default function Page(): JSX.Element {
   return (
-    <main className="flex flex-col items-center justify-between min-h-screen p-24">
-      <Scene
-        style={{ width: "500px", height: "300px", border: "1px solid gray" }}
-      />
+    <main className="h-screen w-screen">
+      <ReactView.Root className="w-full h-full" />
     </main>
   );
 }
