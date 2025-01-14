@@ -131,6 +131,7 @@ export const SetUp = ({ level }: { level: number }) => {
               labelPlacement="outside"
               classNames={{
                 inputWrapper: "p-0 w-[150px]",
+                input: "text-center",
               }}
               value={`${(scale * 100).toFixed(0)}`}
               onChange={(e) => {

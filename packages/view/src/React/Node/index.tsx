@@ -78,23 +78,25 @@ export const Node = memo(
     const handleMouseDown = useCallback(
       (e: React.MouseEvent<HTMLDivElement>) => {
         console.log(e, "dasdwdwwwww");
-        e.preventDefault();
-        e.stopPropagation();
-        dispatch(setSelectionEnd(null));
-        dispatch(setIsSelecting(true));
+        if (e.button === 0) {
+          e.preventDefault();
+          e.stopPropagation();
+          dispatch(setSelectionEnd(null));
+          dispatch(setIsSelecting(true));
 
-        if (containerRef.current) {
-          console.log(content, "content");
-          const containerRect = containerRef.current.getBoundingClientRect();
-          const containerX = containerRect.left;
-          const containerY = containerRect.top;
+          if (containerRef.current) {
+            console.log(content, "content");
+            const containerRect = containerRef.current.getBoundingClientRect();
+            const containerX = containerRect.left;
+            const containerY = containerRect.top;
 
-          dispatch(
-            setSelectionStart({
-              x: e.clientX - containerX + (content?.x || 0),
-              y: e.clientY - containerY + (content?.y || 0),
-            })
-          );
+            dispatch(
+              setSelectionStart({
+                x: e.clientX - containerX + (content?.x || 0),
+                y: e.clientY - containerY + (content?.y || 0),
+              })
+            );
+          }
         }
       },
       [content]
