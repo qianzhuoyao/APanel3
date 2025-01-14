@@ -155,7 +155,7 @@ type：节点类型（例如 FRAME、RECTANGLE、TEXT）。
 name：节点名称。
 x、y：相对于父节点的坐标。
 width、height：宽度和高度。
-fill、stroke：填充和描边样式。
+fill、stroke,strokeWidth,strokeRadius：填充和描边样式。
 children：子节点数组
 depth：深度
 parent：父节点引用。
@@ -174,6 +174,9 @@ export interface INode {
   height: number;
   fill?: string;
   stroke?: string;
+  strokeWidth?: string;
+  strokeType?: string;
+  strokeRadius?: string;
   children?: INode[];
   parent?: INode;
   depth: number;

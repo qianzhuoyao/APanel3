@@ -29,9 +29,9 @@ const Line = memo(({ fill }: { fill?: string }) => (
   >
     <path
       fill={fill}
-      fill-rule="evenodd"
+      fillRule="evenodd"
       d="M1 10a1 1 0 0 1 1-1h16a1 1 0 1 1 0 2H2a1 1 0 0 1-1-1"
-      clip-rule="evenodd"
+      clipRule="evenodd"
     />
   </svg>
 ));
@@ -60,9 +60,9 @@ const Triangle = memo(({ fill }: { fill?: string }) => (
     <path
       fill="none"
       stroke={fill}
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
       d="M10.363 3.591L2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"
     />
   </svg>
@@ -78,15 +78,15 @@ const Text = memo(({ fill }: { fill?: string }) => (
     <g fill="none">
       <path
         fill={fill}
-        fill-rule="evenodd"
+        fillRule="evenodd"
         d="M7.934 2h8.132c.886 0 1.65 0 2.262.082c.655.088 1.284.287 1.793.797c.51.51.709 1.138.797 1.793C21 5.284 21 6.048 21 6.934V7.95a1 1 0 1 1-2 0V7c0-.971-.002-1.599-.064-2.061c-.059-.434-.153-.57-.229-.646s-.212-.17-.646-.229C17.6 4.002 16.971 4 16 4h-3v17a1 1 0 1 1-2 0V4H8c-.971 0-1.599.002-2.061.064c-.434.059-.57.153-.646.229s-.17.212-.229.646C5.002 5.4 5 6.029 5 7v.95a1 1 0 1 1-2 0V6.934c0-.886 0-1.65.082-2.262c.088-.655.287-1.284.797-1.793c.51-.51 1.138-.709 1.793-.797C6.284 2 7.048 2 7.934 2"
-        clip-rule="evenodd"
+        clipRule="evenodd"
       />
       <path
         stroke={fill}
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
         d="M7 21h10"
       />
     </g>
@@ -145,9 +145,9 @@ const Mouse = memo(({ fill }: { fill?: string }) => (
     <path
       fill="none"
       stroke={fill}
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.4"
       d="m6.244 3.114l12.298 8.66A.693.693 0 0 1 18.346 13l-4.62.877a.565.565 0 0 0-.334.82l2.31 4.377a.693.693 0 0 1-.22.981l-1.663.866a.693.693 0 0 1-.935-.289l-2.31-4.387a.577.577 0 0 0-.866-.232L6.325 19.27a.692.692 0 0 1-1.155-.554V3.703a.693.693 0 0 1 1.074-.589"
     />
   </svg>
@@ -163,9 +163,9 @@ const Hand = memo(({ fill }: { fill?: string }) => {
     >
       <path
         fill={fill}
-        fill-rule="evenodd"
+        fillRule="evenodd"
         d="M14 10.3V4.54a1.5 1.5 0 0 0-2-1.415V2.54a1.5 1.5 0 0 0-2.052-1.395C9.775.508 9.192.035 8.498.035s-1.27.468-1.45 1.11A1.5 1.5 0 0 0 4.996 2.54v4.79l-.146-.146a1.917 1.917 0 0 0-2.71 2.71l3.76 3.76a4.737 4.737 0 0 0 8.09-3.35zM8.5 1.04a.5.5 0 0 0-.5.5v5a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.854.354l-1-1a.91.91 0 0 0-1.29 0a.91.91 0 0 0 0 1.29l3.76 3.76a3.741 3.741 0 0 0 6.39-2.64v-5.76a.5.5 0 0 0-1 0v2a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-1 0v4a.5.5 0 0 1-1 0v-5a.5.5 0 0 0-.5-.5z"
-        clip-rule="evenodd"
+        clipRule="evenodd"
       />
     </svg>
   );

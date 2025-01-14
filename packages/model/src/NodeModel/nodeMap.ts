@@ -1,4 +1,5 @@
 import { INode } from "./type";
+import RBush from "rbush";
 
 const createSingle = <C>(initializer: () => C): (() => C) => {
   let instance: C | null = null;
@@ -11,3 +12,14 @@ const createSingle = <C>(initializer: () => C): (() => C) => {
 };
 
 export const nodeMap = createSingle(() => new Map<string, INode>());
+export const getNodeRTree = createSingle(
+  () =>
+    new RBush<{
+      minX: number;
+      minY: number;
+      maxX: number;
+      maxY: number;
+      name: string;
+      id: string;
+    }>()
+);

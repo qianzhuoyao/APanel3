@@ -12,6 +12,7 @@ const sceneSlice = createSlice({
     selectionEnd: null,
     isSelecting: false,
     isLock: false,
+    selectionNodeIdList: [] as string[],
     actionMode: ACTION_MODE.HAND as IActionMode, // 当前操作模式
   },
   reducers: {
@@ -20,6 +21,9 @@ const sceneSlice = createSlice({
     },
     setIsLock: (state, action: PayloadAction<boolean>) => {
       state.isLock = action.payload;
+    },
+    setSelectionNodeIdList: (state, action: PayloadAction<string[]>) => {
+      state.selectionNodeIdList = action.payload;
     },
     setScale: (state, action: PayloadAction<number>) => {
       state.scale = action.payload;
@@ -48,6 +52,7 @@ export const store = configureStore({
 export const {
   setRoot,
   setIsLock,
+  setSelectionNodeIdList,
   setActionMode,
   setScale,
   setSelectionStart,

@@ -38,6 +38,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@reduxjs/toolkit": "^2.5.0",
     "rbush": "^4.0.1",
+    "rbush-knn": "^4.0.0",
     "react-redux": "^9.2.0",
     "react-use": "^17.6.0"
   },

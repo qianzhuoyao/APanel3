@@ -1,16 +1,27 @@
-import { memo, useCallback, useEffect, useMemo, useRef } from "react";
+import {
+  CSSProperties,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { INode } from "@repo/model/NodeModel/type";
 import { useDispatch, useSelector } from "react-redux";
-import { createNode, nodeMap } from "@repo/model/NodeModel";
+import { createNode, getNodeRTree, nodeMap } from "@repo/model/NodeModel";
 import {
+  setActionMode,
   setIsSelecting,
   setRoot,
   setSelectionEnd,
+  setSelectionNodeIdList,
   setSelectionStart,
 } from "../Store/sceneStore";
 import { translateRoot } from "../Scene/translate";
 import { INodeContent } from "../Scene/type";
 import { sceneMouseMove, sceneMouseUp } from "../Scene/sceneEvent";
+import { IActionMode } from "../Root/type";
+import { ACTION_MODE } from "../Root/actionConstant";
 
 export const Node = memo(
   ({
@@ -23,6 +34,14 @@ export const Node = memo(
     viewportHeight: number;
   }) => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const dispatch = useDispatch();
+    const actionMode = useSelector(
+      (state: {
+        scene: {
+          actionMode: IActionMode;
+        };
+      }) => state.scene.actionMode
+    );
     const isSelecting = useSelector(
       (state: {
         scene: {
@@ -81,29 +100,13 @@ export const Node = memo(
       [content]
     );
 
-    /**
-     * 鼠标移动
-     * @param e
-     */
-    // const handleMouseMove = useCallback(
-    //   (e: React.MouseEvent<HTMLDivElement>) => {
-    // e.stopPropagation();
-    // console.log(e, content, isSelecting, "sssssssss");
-    // if (!isSelecting) return;
-    // if (containerRef.current) {
-    //   const containerRect = containerRef.current.getBoundingClientRect();
-    //   const containerX = containerRect.left;
-    //   const containerY = containerRect.top;
-    //   dispatch(
-    //     setSelectionEnd({
-    //       x: e.clientX - containerX + (content?.x || 0),
-    //       y: e.clientY - containerY + (content?.y || 0),
-    //     })
-    //   );
-    // }
-    // },
-    //   [isSelecting, content]
-    // );
+    const selectionNodeIdList = useSelector(
+      (state: {
+        scene: {
+          selectionNodeIdList: string[];
+        };
+      }) => state.scene.selectionNodeIdList
+    );
 
     useEffect(() => {
       const mouseMoveSubscription = sceneMouseMove().observable.subscribe(
@@ -156,7 +159,6 @@ export const Node = memo(
       return Math.abs(selectionEnd.y - selectionStart.y);
     }, [selectionStart, selectionEnd]);
 
-    const dispatch = useDispatch();
     /**
      * 鼠标抬起
      * 放外边去，通过树选择来绘制对应位置
@@ -164,29 +166,41 @@ export const Node = memo(
     useEffect(() => {
       const mouseUpSubscription = sceneMouseUp().observable.subscribe((e) => {
         dispatch(setIsSelecting(false));
-        // console.log(e, isSelecting, "ssssss");
-        // if (e.target instanceof HTMLElement) {
-        //   const currentNode = nodeMap().get(
-        //     e.target?.getAttribute("data-id") || ""
-        //   );
-        //   const rootNode = nodeMap().get(root.id);
-        //   if (currentNode && rootNode) {
-        //     // 创建节点
-        //     createNode({
-        //       parent: currentNode,
-        //       type: "NODE",
-        //       name: "Node",
-        //       x: selectionLeft,
-        //       y: selectionTop,
-        //       width: selectionWidth,
-        //       height: selectionHeight,
-        //     });
-        //     // 更新根节点
-        //     const newRoot = translateRoot(rootNode);
-        //     console.log(newRoot, rootNode, "newRootsss");
-        //     dispatch(setRoot(newRoot));
-        //   }
-        // }
+
+        if (e.target instanceof HTMLElement) {
+          const currentNode = nodeMap().get(
+            e.target?.getAttribute("data-id") || ""
+          );
+          const rootNode = nodeMap().get(root.id);
+          //创建正方形节点
+          if (actionMode === ACTION_MODE.RECT) {
+            if (currentNode && rootNode) {
+              // 创建节点
+              createNode({
+                parent: currentNode,
+                type: ACTION_MODE.RECT,
+                name: "矩形节点",
+                x: selectionLeft,
+                strokeWidth: "1px",
+                strokeType: "solid",
+                strokeRadius: "4px",
+                fill: "#ffffff",
+                stroke: "#1b1b1f",
+                y: selectionTop,
+                width: selectionWidth,
+                height: selectionHeight,
+              });
+              // 更新根节点
+              const newRoot = translateRoot(rootNode);
+              console.log(newRoot, rootNode, "newRootsss");
+              dispatch(setRoot(newRoot));
+              dispatch(setActionMode(ACTION_MODE.MOUSE));
+            }
+          } else if (actionMode === ACTION_MODE.MOUSE) {
+            //选中效果
+          }
+        }
+
         dispatch(setSelectionStart(null));
         dispatch(setSelectionEnd(null));
       });
@@ -209,6 +223,25 @@ export const Node = memo(
       return top <= viewportHeight && left <= viewportWidth;
     }, [content, viewportWidth, viewportHeight]);
 
+    const NodeSymbolStyle: CSSProperties = useMemo(() => {
+      if (content?.type === ACTION_MODE.RECT) {
+        return {
+          border: `${content?.strokeWidth} ${content?.strokeType} ${content?.stroke}`,
+          borderRadius: `${content?.strokeRadius}`,
+        };
+      }
+      return {};
+    }, [content]);
+
+    const SelectionStyle: CSSProperties = useMemo(() => {
+      if (content?.id && selectionNodeIdList.includes(content?.id)) {
+        return {
+          border: `2px solid green`,
+        };
+      }
+      return {};
+    }, [isSelecting, content?.id, selectionNodeIdList]);
+
     if (content === null) return <></>;
 
     return (
@@ -223,6 +256,8 @@ export const Node = memo(
           top: content.y + "px",
           width: content.width + "px",
           height: content.height + "px",
+          ...NodeSymbolStyle,
+          ...SelectionStyle,
         }}
         onMouseDown={handleMouseDown}
         ref={containerRef}

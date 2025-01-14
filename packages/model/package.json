@@ -17,6 +17,7 @@
     "@repo/lib": "workspace:*"
   },
   "devDependencies": {
+    "@types/rbush": "^4.0.0",
     "@repo/eslint-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",

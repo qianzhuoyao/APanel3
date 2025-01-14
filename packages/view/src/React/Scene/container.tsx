@@ -9,12 +9,15 @@ import {
 } from "react";
 import { Node } from "../Node";
 import { useDispatch, useSelector } from "react-redux";
-import { createNode } from "@repo/model/NodeModel";
-import { setRoot } from "../Store/sceneStore";
+import { createNode, getNodeRTree } from "@repo/model/NodeModel";
+import { setRoot, setSelectionNodeIdList } from "../Store/sceneStore";
 import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
 import { translateRoot } from "./translate";
 import { INodeContent, ISceneProp } from "./type";
 import cn from "clsx";
+import { useSyncRTree } from "../Root/useSyncRTree";
+import { IActionMode } from "../Root/type";
+import { ACTION_MODE } from "../Root/actionConstant";
 
 /**
  * 场景容器
@@ -107,6 +110,14 @@ export const SceneContainer = ({ style, className }: ISceneProp) => {
     console.log(event);
   }, []);
 
+  const actionMode = useSelector(
+    (state: {
+      scene: {
+        actionMode: IActionMode;
+      };
+    }) => state.scene.actionMode
+  );
+
   /**
    * 初始化场景
    */
@@ -122,6 +133,46 @@ export const SceneContainer = ({ style, className }: ISceneProp) => {
     });
     dispatch(setRoot(translateRoot(Root.node)));
   }, [style]);
+  /**
+   * 同步rTree
+   */
+  useSyncRTree();
+
+  /**
+   * 选中状态
+   */
+  useEffect(() => {
+    //选中状态 只选中当前节点下的子节点们 这个很重要
+    if (isSelecting) {
+      if (actionMode === ACTION_MODE.MOUSE) {
+        //完全融入
+        const selectionNodeOfRTree = getNodeRTree()
+          .search({
+            minX: selectionLeft,
+            minY: selectionTop,
+            maxX: selectionLeft + selectionWidth,
+            maxY: selectionTop + selectionHeight,
+          })
+          .filter((item) => {
+            return (
+              item.minX >= selectionLeft &&
+              item.minY >= selectionTop &&
+              item.maxX <= selectionLeft + selectionWidth &&
+              item.maxY <= selectionTop + selectionHeight
+            );
+          });
+        dispatch(
+          setSelectionNodeIdList(selectionNodeOfRTree.map((item) => item.id))
+        );
+      }
+    }
+  }, [
+    selectionHeight,
+    selectionWidth,
+    selectionTop,
+    selectionLeft,
+    isSelecting,
+  ]);
 
   /**
    * 选框样式
