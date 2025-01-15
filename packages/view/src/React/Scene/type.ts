@@ -6,6 +6,6 @@ export interface ISceneProp {
   className?: string;
 }
 export type INodeContent = Omit<INode, "parent" | "children"> & {
-  parent?: string;
-  children?: INodeContent[];
+  parent?: string | INode;
+  children?: INodeContent[] | INode[];
 };

@@ -29,12 +29,7 @@ export const Root = ({ style, className }: IRootProp) => {
         }}
         className={className}
       >
-        <Scene
-          style={{
-            zIndex: LEVEL.scene,
-          }}
-          className="w-full h-full"
-        ></Scene>
+        <Scene className="w-full h-full"></Scene>
         {/* 操作图层 */}
         <div className="absolute top-0 left-0 right-0 bottom-0">
           <div className="relative w-full h-full">

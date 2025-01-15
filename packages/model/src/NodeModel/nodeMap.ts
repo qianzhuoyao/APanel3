@@ -19,6 +19,7 @@ export const getNodeRTree = createSingle(
       minY: number;
       maxX: number;
       maxY: number;
+      zIndex: number;
       name: string;
       id: string;
     }>()

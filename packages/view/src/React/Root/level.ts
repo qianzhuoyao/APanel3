@@ -1,9 +1,12 @@
+export const MAX_LEVEL = 999;
+export const MIN_LEVEL = 20;
+
 export const LEVEL = {
   operator: {
-    setUp: 21,
-    nodeMapTree: 21,
-    setting: 21,
-    menu: 21,
+    setUp: MAX_LEVEL,
+    nodeMapTree: MAX_LEVEL,
+    setting: MAX_LEVEL,
+    menu: MAX_LEVEL,
   },
-  scene: 20,
+  scene: MIN_LEVEL,
 } as const;

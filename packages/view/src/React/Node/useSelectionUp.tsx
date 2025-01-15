@@ -1,17 +1,18 @@
-import { setSelectionEnd } from "../Store/sceneStore";
+import { setActionType, setSelectionEnd } from "../Store/sceneStore";
 
 import { setSelectionStart } from "../Store/sceneStore";
 
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sceneMouseUp } from "../Scene/sceneEvent";
-import { setActionMode, setIsSelecting, setRoot } from "../Store/sceneStore";
+import { setActionMode, setRoot } from "../Store/sceneStore";
 import { createNode } from "@repo/model/NodeModel";
 import { nodeMap } from "@repo/model/NodeModel";
-import { ACTION_MODE } from "../Root/actionConstant";
+import { ACTION_MODE, ACTION_TYPE } from "../Root/actionConstant";
 import { IActionMode } from "../Root/type";
 import { INode } from "@repo/model/NodeModel/type";
 import { translateRoot } from "../Scene/translate";
+import { INodeContent } from "../Scene/type";
 
 export const useSelectionUp = () => {
   const dispatch = useDispatch();
@@ -60,6 +61,14 @@ export const useSelectionUp = () => {
     return Math.min(selectionStart.y, selectionEnd.y);
   }, [selectionStart, selectionEnd]);
 
+  const currentPickNode = useSelector(
+    (state: {
+      scene: {
+        currentPickNode: INodeContent | null;
+      };
+    }) => state.scene.currentPickNode
+  );
+
   /**
    * 选框宽度
    */
@@ -77,17 +86,15 @@ export const useSelectionUp = () => {
 
   useEffect(() => {
     const mouseUpSubscription = sceneMouseUp().observable.subscribe((e) => {
-      dispatch(setIsSelecting(false));
-
-      if (e.target instanceof HTMLElement) {
-        const currentNode = nodeMap().get(
-          e.target?.getAttribute("data-id") || ""
-        );
+      dispatch(setActionType(ACTION_TYPE.DEFAULT));
+      const rootNode = nodeMap().get(root.id);
+      if (e.target instanceof HTMLElement && currentPickNode) {
+        const currentNode = nodeMap().get(currentPickNode.id);
         console.log(currentNode, "currentNode");
-        const rootNode = nodeMap().get(root.id);
+
         //创建正方形节点
         if (actionMode === ACTION_MODE.RECT) {
-          if (currentNode && rootNode) {
+          if (currentNode) {
             // 创建节点
             createNode({
               parent: currentNode,
@@ -98,19 +105,25 @@ export const useSelectionUp = () => {
               strokeType: "solid",
               strokeRadius: "4px",
               fill: "#ffffff",
+              rootOffsetX: currentNode?.rootOffsetX || 0,
+              rootOffsetY: currentNode?.rootOffsetY || 0,
               stroke: "#1b1b1f",
               y: selectionTop - (currentNode?.y || 0),
               width: selectionWidth,
               height: selectionHeight,
             });
-            // 更新根节点
-            const newRoot = translateRoot(rootNode);
-            console.log(newRoot, rootNode, "newRootsss");
-            dispatch(setRoot(newRoot));
+
             dispatch(setActionMode(ACTION_MODE.MOUSE));
           }
         } else if (actionMode === ACTION_MODE.MOUSE) {
           //选中效果
+        }
+
+        // 更新根节点
+        if (rootNode) {
+          const newRoot = translateRoot(rootNode);
+          console.log(newRoot, rootNode, "newRootsss");
+          dispatch(setRoot(newRoot));
         }
       }
 
@@ -124,6 +137,7 @@ export const useSelectionUp = () => {
   }, [
     selectionLeft,
     selectionTop,
+    currentPickNode,
     selectionWidth,
     selectionHeight,
     actionMode,

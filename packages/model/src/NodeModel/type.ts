@@ -155,6 +155,7 @@ type：节点类型（例如 FRAME、RECTANGLE、TEXT）。
 name：节点名称。
 x、y：相对于父节点的坐标。
 width、height：宽度和高度。
+rootOffsetX、rootOffsetY：相对于root节点的偏移量。
 fill、stroke,strokeWidth,strokeRadius：填充和描边样式。
 children：子节点数组
 depth：深度
@@ -162,6 +163,7 @@ parent：父节点引用。
 constraints：约束属性，用于自动布局。
 effects：阴影、模糊等效果。
 prototypeData：原型交互数据。
+zIndex：节点层级
 componentId：如果是一个组件实例，则指向组件的 ID。
  */
 export interface INode {
@@ -173,10 +175,13 @@ export interface INode {
   width: number;
   height: number;
   fill?: string;
+  zIndex?: number;
   stroke?: string;
   strokeWidth?: string;
   strokeType?: string;
   strokeRadius?: string;
+  rootOffsetX?: number;
+  rootOffsetY?: number;
   children?: INode[];
   parent?: INode;
   depth: number;

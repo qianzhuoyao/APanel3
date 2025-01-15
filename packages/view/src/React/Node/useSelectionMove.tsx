@@ -1,41 +1,41 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { setSelectionEnd } from "../Store/sceneStore";
 import { sceneMouseMove } from "../Scene/sceneEvent";
 import { INodeContent } from "../Scene/type";
+import { IActionType } from "../Root/type";
+import { ACTION_TYPE } from "../Root/actionConstant";
 
 /**
  * 选中 期间鼠标移动
  * @param container 容器
  * @param content 内容
- * @param isSelecting 是否选中
+ * @param actionType 动作类型
  */
-export const useSelectionMove = (
-  container: HTMLDivElement | null,
-  content: INodeContent | null,
-  isSelecting: boolean
-) => {
+export const useSelectionMove = () => {
   const dispatch = useDispatch();
 
+  const actionType = useSelector(
+    (state: {
+      scene: {
+        actionType: IActionType;
+      };
+    }) => state.scene.actionType
+  );
   useEffect(() => {
     const mouseMoveSubscription = sceneMouseMove().observable.subscribe((e) => {
       e.stopPropagation();
-      if (!isSelecting) return;
-      if (container) {
-        const containerRect = container.getBoundingClientRect();
-        const containerX = containerRect.left;
-        const containerY = containerRect.top;
-        dispatch(
-          setSelectionEnd({
-            x: e.clientX - containerX + (content?.x || 0),
-            y: e.clientY - containerY + (content?.y || 0),
-          })
-        );
-      }
+      if (actionType !== ACTION_TYPE.SELECT) return;
+      dispatch(
+        setSelectionEnd({
+          x: e.pageX,
+          y: e.pageY,
+        })
+      );
     });
     return () => {
       mouseMoveSubscription.unsubscribe();
     };
-  }, [content, isSelecting]);
+  }, [actionType]);
 };

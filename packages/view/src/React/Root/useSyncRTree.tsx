@@ -2,6 +2,7 @@ import { getNodeRTree, nodeMap } from "@repo/model/NodeModel";
 import { INodeContent } from "../Scene/type";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { MIN_LEVEL } from "./level";
 
 export const useSyncRTree = () => {
   const rTree = getNodeRTree();
@@ -21,11 +22,12 @@ export const useSyncRTree = () => {
       Array.from(_nodeMap.values())
         .filter((node) => node.type !== "SCENE")
         .map((node) => ({
-          minX: node.x,
-          minY: node.y,
-          maxX: node.x + node.width,
-          maxY: node.y + node.height,
+          minX: node.x + (node.rootOffsetX || 0),
+          minY: node.y + (node.rootOffsetY || 0),
+          maxX: node.x + node.width + (node.rootOffsetX || 0),
+          maxY: node.y + node.height + (node.rootOffsetY || 0),
           id: node.id,
+          zIndex: node.zIndex || MIN_LEVEL,
           name: node.name,
         }))
     );

@@ -10,3 +10,9 @@ export const ACTION_MODE = {
   RHOMBUS: "RHOMBUS",
   HAND: "HAND",
 } as const;
+
+export const ACTION_TYPE = {
+  DEFAULT: "DEFAULT",
+  SELECT: "SELECT",
+  BOTH_SELECT: "BOTH_SELECT",
+} as const;

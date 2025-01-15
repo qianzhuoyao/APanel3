@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 import { INode } from "./type";
-import { getNodeRTree, nodeMap } from "./nodeMap";
+import { nodeMap } from "./nodeMap";
 
 export const createNode = (
   params: {
@@ -13,7 +13,14 @@ export const createNode = (
     height: number;
   } & Pick<
     INode,
-    "strokeWidth" | "strokeRadius" | "fill" | "stroke" | "strokeType"
+    | "strokeWidth"
+    | "strokeRadius"
+    | "fill"
+    | "stroke"
+    | "strokeType"
+    | "rootOffsetX"
+    | "zIndex"
+    | "rootOffsetY"
   >
 ): { node: INode } => {
   const {
@@ -29,6 +36,9 @@ export const createNode = (
     fill,
     stroke,
     strokeType,
+    rootOffsetX,
+    zIndex,
+    rootOffsetY,
   } = params;
   const newNode: INode = {
     id: v4(), // 生成唯一 ID
@@ -43,8 +53,11 @@ export const createNode = (
     strokeWidth,
     fill,
     strokeType,
+    rootOffsetX,
+    rootOffsetY,
     stroke,
     strokeRadius,
+    zIndex,
   };
   if (parent) {
     newNode.parent = parent;
