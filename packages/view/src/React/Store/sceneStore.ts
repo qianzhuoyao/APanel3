@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { configureStore } from "@reduxjs/toolkit";
 import { ACTION_MODE } from "../Root/actionConstant";
 import { IActionMode } from "../Root/type";
+import { INodeContent } from "../Scene/type";
 
 const sceneSlice = createSlice({
   name: "scene",
@@ -14,6 +15,7 @@ const sceneSlice = createSlice({
     isLock: false,
     selectionNodeIdList: [] as string[],
     actionMode: ACTION_MODE.HAND as IActionMode, // 当前操作模式
+    searchNodeContainer: null as INodeContent | null, //框选起始点
   },
   reducers: {
     setRoot: (state, action) => {
@@ -30,6 +32,12 @@ const sceneSlice = createSlice({
     },
     setActionMode: (state, action: PayloadAction<IActionMode>) => {
       state.actionMode = action.payload;
+    },
+    setSearchNodeContainer: (
+      state,
+      action: PayloadAction<INodeContent | null>
+    ) => {
+      state.searchNodeContainer = action.payload;
     },
     setSelectionStart: (state, action) => {
       state.selectionStart = action.payload;
@@ -58,4 +66,5 @@ export const {
   setSelectionStart,
   setSelectionEnd,
   setIsSelecting,
+  setSearchNodeContainer,
 } = sceneSlice.actions;

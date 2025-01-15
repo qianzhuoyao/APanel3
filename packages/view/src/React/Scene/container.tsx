@@ -18,6 +18,7 @@ import cn from "clsx";
 import { useSyncRTree } from "../Root/useSyncRTree";
 import { IActionMode } from "../Root/type";
 import { ACTION_MODE } from "../Root/actionConstant";
+import { INode } from "@repo/model/NodeModel/type";
 
 /**
  * 场景容器
@@ -138,6 +139,14 @@ export const SceneContainer = ({ style, className }: ISceneProp) => {
    */
   useSyncRTree();
 
+  const searchNodeContainer = useSelector(
+    (state: {
+      scene: {
+        searchNodeContainer: INodeContent | null;
+      };
+    }) => state.scene.searchNodeContainer
+  );
+
   /**
    * 选中状态
    */
@@ -148,17 +157,23 @@ export const SceneContainer = ({ style, className }: ISceneProp) => {
         //完全融入
         const selectionNodeOfRTree = getNodeRTree()
           .search({
-            minX: selectionLeft,
-            minY: selectionTop,
-            maxX: selectionLeft + selectionWidth,
-            maxY: selectionTop + selectionHeight,
+            minX: selectionLeft - (searchNodeContainer?.x || 0),
+            minY: selectionTop - (searchNodeContainer?.y || 0),
+            maxX:
+              selectionLeft + selectionWidth - (searchNodeContainer?.x || 0),
+            maxY:
+              selectionTop + selectionHeight - (searchNodeContainer?.y || 0),
           })
           .filter((item) => {
             return (
-              item.minX >= selectionLeft &&
-              item.minY >= selectionTop &&
-              item.maxX <= selectionLeft + selectionWidth &&
-              item.maxY <= selectionTop + selectionHeight
+              item.minX >= selectionLeft - (searchNodeContainer?.x || 0) &&
+              item.minY >= selectionTop - (searchNodeContainer?.y || 0) &&
+              item.maxX <=
+                selectionLeft +
+                  selectionWidth -
+                  (searchNodeContainer?.x || 0) &&
+              item.maxY <=
+                selectionTop + selectionHeight - (searchNodeContainer?.y || 0)
             );
           });
         dispatch(
