@@ -49,6 +49,10 @@ export const BottomCenter = ({
   return (
     <div
       ref={anchorRef}
+      onMouseDown={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
       style={{
         visibility: showAnchor ? "visible" : "hidden",
       }}

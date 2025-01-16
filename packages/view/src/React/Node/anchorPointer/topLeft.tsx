@@ -51,6 +51,10 @@ export const TopLeft = ({
       style={{
         visibility: showAnchor ? "visible" : "hidden",
       }}
+      onMouseDown={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
       data-anchor="top-left"
       className="absolute w-[8px] h-[8px] top-0 left-0 translate-x-[-50%] translate-y-[-50%] bg-[red] cursor-pointer"
     ></div>

@@ -17,14 +17,18 @@ export const Anchor = ({
   actionType,
   content,
   onResize,
+  onRotate,
+  onStartRotate,
   onMove,
   onUpdated,
 }: {
+  onStartRotate: (event: any) => void;
   children: React.ReactNode;
   actionType: IActionType;
   content: INodeContent;
   onMove: (position: { x: number; y: number }) => void;
   onUpdated: () => void;
+  onRotate: (event: any) => void;
   onResize: (
     anchor: string[],
     position: {
@@ -55,6 +59,11 @@ export const Anchor = ({
     onUpdated();
   }, [onUpdated]);
 
+  const onStartUpdateAngle = useCallback((event: any) => {
+    console.log("startUpdateAngle", event);
+    onStartRotate(event);
+  }, []);
+
   const onUpdatePosition = useCallback(
     (
       anchor: string[],
@@ -63,6 +72,13 @@ export const Anchor = ({
       onResize(anchor, position);
     },
     [onResize]
+  );
+
+  const onUpdateAngle = useCallback(
+    (event: any) => {
+      onRotate(event);
+    },
+    [onRotate]
   );
 
   return (
@@ -116,9 +132,10 @@ export const Anchor = ({
         }
       />
       <Rotate
-        updatedPosition={onUpdatedPosition}
+        updatedAngle={onUpdatedPosition}
+        startUpdateAngle={onStartUpdateAngle}
         showAnchor={anchorShow}
-        updatePosition={(position) => onUpdatePosition(["rotate"], position)}
+        updateAngle={(event ) => onUpdateAngle(event)}
       />
       {children}
     </>

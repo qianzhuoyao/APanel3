@@ -54,6 +54,10 @@ export const BottomRight = ({
       style={{
         visibility: showAnchor ? "visible" : "hidden",
       }}
+      onMouseDown={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
       data-anchor="bottom-right"
       className="absolute w-[8px] h-[8px] bottom-0 right-0 translate-x-[50%] translate-y-[50%] bg-[red] cursor-pointer"
     ></div>

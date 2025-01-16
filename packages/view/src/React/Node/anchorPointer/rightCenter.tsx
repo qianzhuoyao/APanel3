@@ -54,6 +54,10 @@ export const RightCenter = ({
       style={{
         visibility: showAnchor ? "visible" : "hidden",
       }}
+      onMouseDown={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
       data-anchor="right-center"
       className="absolute w-[8px] h-[8px] top-[50%] right-0 translate-x-[50%] translate-y-[-50%] bg-[red] cursor-pointer"
     ></div>

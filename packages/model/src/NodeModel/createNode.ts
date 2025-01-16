@@ -48,6 +48,7 @@ export const createNode = (
     y,
     width,
     height,
+    angle: 0,
     depth: parent ? parent.depth + 1 : 0, // 根据父节点深度设置自身深度
     children: [],
     strokeWidth,

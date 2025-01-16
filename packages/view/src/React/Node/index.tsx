@@ -25,6 +25,7 @@ import interact from "interactjs";
 import { traverseTree } from "@repo/model/NodeModel";
 import { reTranslateRoot } from "../Scene/reTranslateRoot";
 import { translateRoot } from "../Scene/translate";
+import { useUpdateRoot } from "../Root/useUpdateRoot";
 
 export const Node = memo(
   ({
@@ -41,30 +42,33 @@ export const Node = memo(
       y: number;
       width: number;
       height: number;
+      angle: number;
       child: HTMLDivElement | null;
     }>({
       x: 0,
       y: 0,
       width: 0,
       height: 0,
+      angle: 0,
       child: null,
     });
 
     const setContainerRef: RefCallback<HTMLDivElement> = (node) => {
       if (node) {
-        nodeRef.current.child = node;
         if (content) {
+          //每次更新时需要预设一下
           node.style.width = content.width + "px";
           node.style.height = content.height + "px";
           node.style.left = content.x + "px";
           node.style.top = content.y + "px";
-          node.style.transform = "";
+          node.style.transform = `rotate(${content.angle}deg)`;
           nodeRef.current.x = 0;
           nodeRef.current.y = 0;
+          nodeRef.current.child = node;
+          nodeRef.current.angle = content?.angle || 0;
+          nodeRef.current.width = content?.width || 0;
+          nodeRef.current.height = content?.height || 0;
         }
-        nodeRef.current.child = node;
-        nodeRef.current.width = content?.width || 0;
-        nodeRef.current.height = content?.height || 0;
 
         interact(node).draggable({
           listeners: {
@@ -75,7 +79,7 @@ export const Node = memo(
               if (actionType === ACTION_TYPE.DEFAULT) {
                 nodeRef.current.x += event.dx;
                 nodeRef.current.y += event.dy;
-                node.style.transform = `translate(${nodeRef.current.x}px, ${nodeRef.current.y}px)`;
+                node.style.transform = `translate(${nodeRef.current.x}px, ${nodeRef.current.y}px) rotate(${nodeRef.current.angle}deg)`;
               }
             },
           },
@@ -125,22 +129,19 @@ export const Node = memo(
       }) => state.scene.root
     );
 
+    const updateRoot = useUpdateRoot([content]);
+
     const onUpdated = useCallback(() => {
-      reTranslateRoot(root, (newRoot) => {
-        traverseTree(newRoot, (item) => {
-          if (item.id === content?.id) {
-            const { left, top } =
-              nodeRef.current.child!.getBoundingClientRect();
-            item.x = left;
-            item.y = top;
-            item.width = nodeRef.current.width;
-            item.height = nodeRef.current.height;
-          }
-        });
-        console.log(newRoot, root, "oslee");
-        dispatch(setRoot(translateRoot(newRoot)));
+      updateRoot((item) => {
+        if (item.id === content?.id) {
+          item.x = content?.x + nodeRef.current.x;
+          item.y = content?.y + nodeRef.current.y;
+          item.angle = nodeRef.current.angle;
+          item.width = nodeRef.current.width;
+          item.height = nodeRef.current.height;
+        }
       });
-    }, [content, root]);
+    }, [updateRoot, content]);
 
     const currentPickNode = useSelector(
       (state: {
@@ -174,6 +175,42 @@ export const Node = memo(
 
     const onMove = useCallback((position: { x: number; y: number }) => {}, []);
 
+    const onStartRotate = useCallback((event: any) => {
+      const rect = nodeRef.current.child!.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const startX = event.clientX;
+      const startY = event.clientY;
+
+      // 计算初始角度，并存储在 event.interaction 中
+      event.interaction.startAngle =
+        (Math.atan2(startY - centerY, startX - centerX) * 180) / Math.PI;
+
+      // 获取当前元素的transform角度
+      const transform = nodeRef.current.child!.style.transform;
+      const currentRotation = transform.match(/rotate\(([^deg]+)deg\)/);
+      event.interaction.currentAngle = currentRotation
+        ? parseFloat(currentRotation[1])
+        : 0;
+    }, []);
+
+    const onRotate = useCallback((event: any) => {
+      const rect = nodeRef.current.child!.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const currentMouseAngle =
+        (Math.atan2(event.clientY - centerY, event.clientX - centerX) * 180) /
+        Math.PI;
+      let angle =
+        currentMouseAngle -
+        event.interaction.startAngle +
+        event.interaction.currentAngle;
+
+      nodeRef.current.child!.style.transform = `rotate(${angle}deg)`;
+      nodeRef.current.angle = angle; // 更新全局角度
+    }, []);
+
     const onResize = useCallback(
       (
         anchor: string[],
@@ -206,7 +243,7 @@ export const Node = memo(
           );
           nodeRef.current.child!.style.width = nodeRef.current.width + "px";
           nodeRef.current.child!.style.height = nodeRef.current.height + "px";
-          nodeRef.current.child!.style.transform = `translate(${nodeRef.current.x}px, ${nodeRef.current.y}px)`;
+          nodeRef.current.child!.style.transform = `translate(${nodeRef.current.x}px, ${nodeRef.current.y}px) rotate(${nodeRef.current.angle}deg)`;
         }
       },
       [content?.type]
@@ -222,7 +259,7 @@ export const Node = memo(
         style={{
           display: isVisible ? "block" : "none",
           position: "absolute",
-
+          userSelect: "none",
           ...NodeSymbolStyle,
           ...SelectionStyle,
           zIndex: content.zIndex,
@@ -236,6 +273,8 @@ export const Node = memo(
           onMove={onMove}
           onResize={onResize}
           onUpdated={onUpdated}
+          onRotate={onRotate}
+          onStartRotate={onStartRotate}
         >
           <div style={{ position: "relative" }}>
             {content.children?.map((child) => (

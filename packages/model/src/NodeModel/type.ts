@@ -175,6 +175,7 @@ export interface INode {
   width: number;
   height: number;
   fill?: string;
+  angle?: number;
   zIndex?: number;
   stroke?: string;
   strokeWidth?: string;

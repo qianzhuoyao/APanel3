@@ -52,6 +52,10 @@ export const TopCenter = ({
       style={{
         visibility: showAnchor ? "visible" : "hidden",
       }}
+      onMouseDown={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
       data-anchor="top-center"
       className="absolute w-[8px] h-[8px] top-0 left-[50%] translate-x-[-50%] translate-y-[-50%] bg-[red] cursor-pointer"
     ></div>
