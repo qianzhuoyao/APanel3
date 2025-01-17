@@ -15,23 +15,25 @@ export const Rotate = ({
 }) => {
   const anchorRef: RefCallback<HTMLDivElement> = (anchor) => {
     if (anchor) {
-      interact(anchor).draggable({
-        // enable inertial throwing
-        inertia: false,
-        listeners: {
-          start(event) {
-            console.log("start");
-            startUpdateAngle(event);
+      interact(anchor)
+        .styleCursor(false)
+        .draggable({
+          // enable inertial throwing
+          inertia: false,
+          listeners: {
+            start(event) {
+              console.log("start");
+              startUpdateAngle(event);
+            },
+            end() {
+              //更新tree
+              updatedAngle();
+            },
+            move(event) {
+              updateAngle(event);
+            },
           },
-          end() {
-            //更新tree
-            updatedAngle();
-          },
-          move(event) {
-            updateAngle(event);
-          },
-        },
-      });
+        });
     }
   };
 

@@ -29,15 +29,7 @@ export const Anchor = ({
   onMove: (position: { x: number; y: number }) => void;
   onUpdated: () => void;
   onRotate: (event: any) => void;
-  onResize: (
-    anchor: string[],
-    position: {
-      x: number;
-      y: number;
-      dx: number;
-      dy: number;
-    }
-  ) => void;
+  onResize: (anchor: string[], event: any) => void;
 }) => {
   const selectionNodeIdList = useSelector(
     (state: {
@@ -86,56 +78,48 @@ export const Anchor = ({
       <TopLeft
         updatedPosition={onUpdatedPosition}
         showAnchor={anchorShow}
-        updatePosition={(position) =>
-          onUpdatePosition(["top", "left"], position)
-        }
+        updatePosition={(event) => onUpdatePosition(["top", "left"], event)}
       />
       <LeftCenter
         updatedPosition={onUpdatedPosition}
         showAnchor={anchorShow}
-        updatePosition={(position) => onUpdatePosition(["left"], position)}
+        updatePosition={(event) => onUpdatePosition(["left"], event)}
       />
       <TopCenter
         updatedPosition={onUpdatedPosition}
         showAnchor={anchorShow}
-        updatePosition={(position) => onUpdatePosition(["top"], position)}
+        updatePosition={(event) => onUpdatePosition(["top"], event)}
       />
       <RightCenter
         updatedPosition={onUpdatedPosition}
         showAnchor={anchorShow}
-        updatePosition={(position) => onUpdatePosition(["right"], position)}
+        updatePosition={(event) => onUpdatePosition(["right"], event)}
       />
       <BottomCenter
         updatedPosition={onUpdatedPosition}
         showAnchor={anchorShow}
-        updatePosition={(position) => onUpdatePosition(["bottom"], position)}
+        updatePosition={(event) => onUpdatePosition(["bottom"], event)}
       />
       <TopRight
         updatedPosition={onUpdatedPosition}
         showAnchor={anchorShow}
-        updatePosition={(position) =>
-          onUpdatePosition(["top", "right"], position)
-        }
+        updatePosition={(event) => onUpdatePosition(["top", "right"], event)}
       />
       <BottomLeft
         updatedPosition={onUpdatedPosition}
         showAnchor={anchorShow}
-        updatePosition={(position) =>
-          onUpdatePosition(["bottom", "left"], position)
-        }
+        updatePosition={(event) => onUpdatePosition(["bottom", "left"], event)}
       />
       <BottomRight
         updatedPosition={onUpdatedPosition}
         showAnchor={anchorShow}
-        updatePosition={(position) =>
-          onUpdatePosition(["bottom", "right"], position)
-        }
+        updatePosition={(event) => onUpdatePosition(["bottom", "right"], event)}
       />
       <Rotate
         updatedAngle={onUpdatedPosition}
         startUpdateAngle={onStartUpdateAngle}
         showAnchor={anchorShow}
-        updateAngle={(event ) => onUpdateAngle(event)}
+        updateAngle={(event) => onUpdateAngle(event)}
       />
       {children}
     </>

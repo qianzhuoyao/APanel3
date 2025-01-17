@@ -41,6 +41,8 @@ export const Node = memo(
       x: number;
       y: number;
       width: number;
+      centerX: number;
+      centerY: number;
       height: number;
       angle: number;
       child: HTMLDivElement | null;
@@ -48,6 +50,8 @@ export const Node = memo(
       x: 0,
       y: 0,
       width: 0,
+      centerX: 0,
+      centerY: 0,
       height: 0,
       angle: 0,
       child: null,
@@ -64,6 +68,8 @@ export const Node = memo(
           node.style.transform = `rotate(${content.angle}deg)`;
           nodeRef.current.x = 0;
           nodeRef.current.y = 0;
+          nodeRef.current.centerX = content.x + content.width / 2;
+          nodeRef.current.centerY = content.y + content.height / 2;
           nodeRef.current.child = node;
           nodeRef.current.angle = content?.angle || 0;
           nodeRef.current.width = content?.width || 0;
@@ -212,27 +218,24 @@ export const Node = memo(
     }, []);
 
     const onResize = useCallback(
-      (
-        anchor: string[],
-        position: { x: number; y: number; dx: number; dy: number }
-      ) => {
+      (anchor: string[], event: any) => {
         if (content?.type === "SCENE") {
           return;
         }
 
         if (nodeRef.current.child) {
           if (anchor.includes("left")) {
-            nodeRef.current.width -= position.dx;
-            nodeRef.current.x += position.dx;
+            nodeRef.current.width -= event.dx;
+            nodeRef.current.x += event.dx;
           } else if (anchor.includes("right")) {
-            nodeRef.current.width += position.dx;
+            nodeRef.current.width += event.dx;
           }
 
           if (anchor.includes("top")) {
-            nodeRef.current.height -= position.dy;
-            nodeRef.current.y += position.dy;
+            nodeRef.current.height -= event.dy;
+            nodeRef.current.y += event.dy;
           } else if (anchor.includes("bottom")) {
-            nodeRef.current.height += position.dy;
+            nodeRef.current.height += event.dy;
           }
           console.log(
             content?.type,

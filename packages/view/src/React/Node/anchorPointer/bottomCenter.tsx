@@ -9,16 +9,12 @@ export const BottomCenter = ({
 }: {
   showAnchor: boolean;
   updatedPosition: () => void;
-  updatePosition: (position: {
-    x: number;
-    y: number;
-    dx: number;
-    dy: number;
-  }) => void;
+  updatePosition: (event: any) => void;
 }) => {
   const anchorRef: RefCallback<HTMLDivElement> = (anchor) => {
     if (anchor) {
       interact(anchor)
+      .styleCursor(false)
         .draggable({})
         .resizable({
           edges: {
@@ -34,12 +30,7 @@ export const BottomCenter = ({
               updatedPosition();
             },
             move(event) {
-              updatePosition({
-                dx: event.dx,
-                dy: event.dy,
-                x: event.delta.x,
-                y: event.delta.y,
-              });
+              updatePosition(event);
             },
           },
         });
