@@ -256,11 +256,6 @@ export const Menu = ({ level }: { level: number }) => {
         name: "线条",
         icon: (fill: string) => <Line fill={fill} />,
       },
-      {
-        id: ACTION_MODE.IFRAME,
-        name: "网页",
-        icon: (fill: string) => <Iframe fill={fill} />,
-      },
     ],
     []
   );

@@ -26,5 +26,7 @@ const App = () => {
 
 ### icon
 
+画布用canvas吧，dom的不行
+
 颜色：#1b1b1f
 大小：20px

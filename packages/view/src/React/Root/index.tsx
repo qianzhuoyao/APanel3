@@ -8,7 +8,10 @@ import { Menu } from "./menu";
 import { NextUIProvider } from "@nextui-org/react";
 import { LEVEL } from "./level";
 import { SetUp } from "./setUp";
-
+import { useEffect } from "react";
+import { useRef } from "react";
+import { useState } from "react";
+import cn from "clsx";
 /**
  * 根组件
  * @param param0
@@ -21,15 +24,28 @@ import { SetUp } from "./setUp";
  */
 
 export const Root = ({ style, className }: IRootProp) => {
+  const sizeRef = useRef<HTMLDivElement>(null);
+
+  const [size, setSize] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  useEffect(() => {
+    setSize({
+      width: sizeRef.current?.getBoundingClientRect().width ?? 0,
+      height: sizeRef.current?.getBoundingClientRect().height ?? 0,
+    });
+  }, []);
+
   return (
     <Provider store={store}>
       <NextUIProvider
         style={{
           ...style,
         }}
-        className={className}
+        className={cn(className, "relative")}
       >
-        <Scene className="w-full h-full"></Scene>
         {/* 操作图层 */}
         <div className="absolute top-0 left-0 right-0 bottom-0">
           <div className="relative w-full h-full">
@@ -38,6 +54,13 @@ export const Root = ({ style, className }: IRootProp) => {
             <Menu level={LEVEL.operator.menu} />
             <SetUp level={LEVEL.operator.setUp} />
           </div>
+        </div>
+        <div
+          data-role="scene-stage-container"
+          ref={sizeRef}
+          className="absolute top-0 left-0 right-0 bottom-0"
+        >
+          <Scene width={size.width} height={size.height}></Scene>
         </div>
       </NextUIProvider>
     </Provider>
