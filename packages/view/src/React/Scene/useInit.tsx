@@ -110,6 +110,7 @@ export const useInit = () => {
 
   useEffect(() => {
     if (appRef.current.app && appRef.current.app?.stage?.destroyed === false) {
+      console.log('soilsss')
       appRef.current.app.renderer.resize(size?.width || 0, size?.height || 0);
       appRef.current.app.stage.hitArea = new Rectangle(
         0,
