@@ -15,6 +15,8 @@ import { useInit } from "./useInit";
 import { Spinner } from "@nextui-org/react";
 import { useDraw } from "./useDraw";
 import { IActionMode } from "../Root/type";
+import { useRoot } from "./useRoot";
+import { ContextMenu } from "./contextMenu";
 
 export const Scene = () => {
   /**
@@ -23,6 +25,9 @@ export const Scene = () => {
   const actionMode = useSelector(
     (state: { scene: { actionMode: IActionMode } }) => state.scene.actionMode
   );
+
+  const root = useRoot();
+
   /**
    * 初始化场景
    */
@@ -30,7 +35,7 @@ export const Scene = () => {
   /**
    * 创建
    */
-  useDraw({ app, actionMode });
+  useDraw({ app, actionMode, root });
 
   return (
     <div ref={setContainer} className="w-full h-full overflow-hidden">
@@ -39,6 +44,7 @@ export const Scene = () => {
           <Spinner size="lg" />
         </div>
       ) : null}
+      <ContextMenu options={[{ item: () => <div>123</div> }]}></ContextMenu>
     </div>
   );
 };

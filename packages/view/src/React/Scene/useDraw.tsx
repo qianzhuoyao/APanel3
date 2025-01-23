@@ -7,6 +7,9 @@ import {
 import { IActionMode } from "../Root/type";
 import { useEffect, useRef } from "react";
 import { ACTION_MODE } from "../Root/actionConstant";
+import { INode } from "@repo/model/NodeModel/type";
+import { createNode } from "@repo/model/NodeModel";
+import { v4 } from "uuid";
 
 /**
  * 基于事件的绘制，不涉及编辑
@@ -15,10 +18,18 @@ import { ACTION_MODE } from "../Root/actionConstant";
 export const useDraw = ({
   app,
   actionMode,
+  root,
 }: {
   app: Application | null;
   actionMode: IActionMode;
+  root: INode | null;
 }) => {
+  const nodeInfoRef = useRef<{
+    list: Record<
+      string,
+      { width: number; height: number; x: number; y: number }
+    >;
+  }>({ list: {} });
   const graphicRef = useRef<{
     graphic: Graphics | null;
     isDrawing: boolean;
@@ -36,13 +47,29 @@ export const useDraw = ({
    * @param event
    */
   const handlePointerDown = (event: FederatedPointerEvent) => {
-    console.log(actionMode, "cscascascascascascas");
+    console.log(actionMode, app?.stage, event, "cscascascascascascas1");
+
+    app?.stage.children.forEach((g) => {
+      if (g instanceof Graphics) {
+        console.log(g, "ce4e4");
+        const currentNode = nodeInfoRef.current.list[g.uid.toString()];
+        if (currentNode) {
+          g.clear();
+          g.roundRect(0, 0, currentNode.width, currentNode.height, 5);
+          g.fill("#ffffff", 0.25);
+          g.stroke({ width: 2, color: "#e1e1e1" });
+        }
+      }
+    });
+
     if (actionMode === ACTION_MODE.RECT) {
-      console.log(event, "cscscscs");
-      graphicRef.current.graphic = new Graphics();
-      app?.stage.addChild(graphicRef.current.graphic);
-      graphicRef.current.isDrawing = true;
-      graphicRef.current.startPoint = { x: event.pageX, y: event.pageY };
+      if (event.button === 0) {
+        console.log(event, "cscscscs");
+        graphicRef.current.graphic = new Graphics();
+        app?.stage.addChild(graphicRef.current.graphic);
+        graphicRef.current.isDrawing = true;
+        graphicRef.current.startPoint = { x: event.pageX, y: event.pageY };
+      }
     }
   };
 
@@ -79,8 +106,12 @@ export const useDraw = ({
     } else {
       graphic.visible = true;
     }
+    graphic.x = x;
+    graphic.y = y;
+    graphic.width = actMinWidth;
+    graphic.height = actMinHeight;
     graphic.clear();
-    graphic.roundRect(x, y, actMinWidth, actMinHeight, 5);
+    graphic.roundRect(0, 0, actMinWidth, actMinHeight, 5);
     isFill && graphic.fill("#ffffff", 0.25);
     graphic.stroke({ width: 2, color: "#e1e1e1" });
   };
@@ -96,6 +127,8 @@ export const useDraw = ({
     }
   };
 
+  const selectNode = () => {};
+
   /**
    * 添加绘制图形
    */
@@ -103,30 +136,49 @@ export const useDraw = ({
     const { x, y, width, height } = graphicRef.current.rect;
     const g = new Graphics();
     g.interactive = true;
-    g.hitArea = new Rectangle(x, y, width, height);
+    g.hitArea = new Rectangle(0, 0, width, height);
     g.on("pointerdown", (event) => {
       console.log(event, "cscscsqqqcs");
     });
     g.on("pointerup", (event) => {
-      console.log(event, "cscscwwwscs");
+      console.log(event, "cscascascascascascas2");
       g.clear();
-      g.roundRect(x, y, width, height, 5);
+      g.x = x;
+      g.y = y;
+      g.width = width;
+      g.height = height;
+      g.roundRect(0, 0, width, height, 5);
       g.fill("#ffffff", 0.25);
       g.stroke({ width: 2, color: "green" });
     });
     drawGraphic(g, width, height, x, y, true);
     app?.stage.addChild(g);
+    return g;
   };
 
   const handlePointerUp = () => {
     if (graphicRef.current.isDrawing) {
       graphicRef.current.isDrawing = false;
       if (graphicRef.current.graphic) {
-        const { width, height } = graphicRef.current.rect;
-        console.log(!isHideGraphic(width, height), "csacascaaaaaasc");
+        const { width, height, x, y } = graphicRef.current.rect;
+
         if (!isHideGraphic(width, height)) {
-          appendGraphic();
+          const g = appendGraphic();
+          nodeInfoRef.current.list[g.uid.toString()] = { width, height, x, y };
+          createNode({
+            componentId: g.uid.toString(),
+            parent: root,
+            type: "RECT",
+            name: "rect",
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+          });
+
+          console.log(g.uid, root, "csacascaaaaaasc");
         }
+
         app?.stage.removeChild(graphicRef.current.graphic);
         graphicRef.current.rect = { width: 0, height: 0, x: 0, y: 0 };
         graphicRef.current.graphic = null;

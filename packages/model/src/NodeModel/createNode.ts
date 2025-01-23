@@ -21,6 +21,7 @@ export const createNode = (
     | "rootOffsetX"
     | "zIndex"
     | "rootOffsetY"
+    | "componentId"
   >
 ): { node: INode } => {
   const {
@@ -37,6 +38,7 @@ export const createNode = (
     stroke,
     strokeType,
     rootOffsetX,
+    componentId,
     zIndex,
     rootOffsetY,
   } = params;
@@ -47,6 +49,7 @@ export const createNode = (
     x,
     y,
     width,
+    componentId,
     height,
     angle: 0,
     depth: parent ? parent.depth + 1 : 0, // 根据父节点深度设置自身深度
