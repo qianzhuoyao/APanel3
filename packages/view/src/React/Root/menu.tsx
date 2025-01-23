@@ -619,6 +619,7 @@ export const Menu = ({ level }: { level: number }) => {
                           : "light"
                       }
                       radius="sm"
+                      isDisabled={isLock}
                       size="sm"
                       isIconOnly
                       aria-label={item.id}
