@@ -12,7 +12,7 @@ const sceneSlice = createSlice({
     allNodes: [] as INodeContent[],
     isLock: false,
     selectionNodeIdList: [] as string[],
-    actionMode: ACTION_MODE.HAND as IActionMode, // 当前操作模式
+    actionMode: ACTION_MODE.MOVE as IActionMode, // 这是默认选择的工具
   },
   reducers: {
     setAllNodes: (state, action: PayloadAction<INodeContent[]>) => {
