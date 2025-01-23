@@ -106,13 +106,13 @@ export const useDraw = ({
     g.hitArea = new Rectangle(x, y, width, height);
     g.on("pointerdown", (event) => {
       console.log(event, "cscscsqqqcs");
+    });
+    g.on("pointerup", (event) => {
+      console.log(event, "cscscwwwscs");
       g.clear();
       g.roundRect(x, y, width, height, 5);
       g.fill("#ffffff", 0.25);
       g.stroke({ width: 2, color: "green" });
-    });
-    g.on("pointerup", (event) => {
-      console.log(event, "cscscwwwscs");
     });
     drawGraphic(g, width, height, x, y, true);
     app?.stage.addChild(g);

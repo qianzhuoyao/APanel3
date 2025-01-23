@@ -39,7 +39,7 @@
     "@reduxjs/toolkit": "^2.5.0",
     "gl-matrix": "^3.4.3",
     "interactjs": "^1.10.27",
-    "pixi.js": "^8.6.6",
+    "pixi.js": "8",
     "rbush": "^4.0.1",
     "rbush-knn": "^4.0.0",
     "react-redux": "^9.2.0",

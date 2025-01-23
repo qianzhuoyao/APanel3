@@ -8,9 +8,6 @@ import { Menu } from "./menu";
 import { NextUIProvider } from "@nextui-org/react";
 import { LEVEL } from "./level";
 import { SetUp } from "./setUp";
-import { useEffect } from "react";
-import { useRef } from "react";
-import { useState } from "react";
 import cn from "clsx";
 /**
  * 根组件
@@ -24,20 +21,6 @@ import cn from "clsx";
  */
 
 export const Root = ({ style, className }: IRootProp) => {
-  const sizeRef = useRef<HTMLDivElement>(null);
-
-  const [size, setSize] = useState({
-    width: 0,
-    height: 0,
-  });
-
-  useEffect(() => {
-    setSize({
-      width: sizeRef.current?.getBoundingClientRect().width ?? 0,
-      height: sizeRef.current?.getBoundingClientRect().height ?? 0,
-    });
-  }, []);
-
   return (
     <Provider store={store}>
       <NextUIProvider
@@ -57,10 +40,9 @@ export const Root = ({ style, className }: IRootProp) => {
         </div>
         <div
           data-role="scene-stage-container"
-          ref={sizeRef}
-          className="absolute top-0 left-0 right-0 bottom-0"
+          className="absolute top-0 left-0 right-0 bottom-0 w-full h-full"
         >
-          <Scene width={size.width} height={size.height}></Scene>
+          <Scene></Scene>
         </div>
       </NextUIProvider>
     </Provider>

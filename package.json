@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "build": "turbo build",
-    "devWeb": "turbo dev --filter web",
+    "build": "turbo run build",
+    "devWebView": "turbo run dev --filter=web & turbo run dev --filter=@repo/view",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "type-check": "turbo type-check",
