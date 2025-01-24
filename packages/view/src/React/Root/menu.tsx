@@ -418,7 +418,7 @@ export const Menu = ({ level }: { level: number }) => {
         children: [
           {
             id: ACTION_MODE.MOVE,
-            name: "移动工具 ",
+            name: "移动与选择工具 ",
             icon: (fill: string) => <Move fill={fill} />,
           },
           {
