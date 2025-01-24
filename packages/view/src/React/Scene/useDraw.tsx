@@ -1,5 +1,6 @@
 import { Application, Graphics, Rectangle } from "pixi.js";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useHandler } from "./useHandler";
 
 /**
  * 基于事件的绘制，不涉及编辑
@@ -21,6 +22,15 @@ export const useDraw = ({ app }: { app: Application | null }) => {
     _selected: new Set(),
     _map: new Map(),
   });
+  /**
+   * 绘制工具handler
+   */
+  const { bindHandlers, initHandler, hideHandler, showHandler } = useHandler();
+  /**
+   * 绘制图形
+   * @param param0
+   * @returns
+   */
   const drawGraphic = ({
     width,
     height,
@@ -55,14 +65,25 @@ export const useDraw = ({ app }: { app: Application | null }) => {
         g.roundRect(0, 0, width, height, 0);
         g.fill("#ffffff", 0.25);
         g.stroke({ width: 2, color: "green" });
+        const info = allNodeRef.current._map.get(g.uid.toString());
+        if (info) {
+          bindHandlers(g, info);
+          showHandler();
+        }
       },
     };
   };
-
+  /**
+   * 查询选中
+   * @param uid
+   * @returns
+   */
   const querySelected = (uid: string) => {
     return allNodeRef.current._selected.has(uid);
   };
-
+  /**
+   * 重置选中
+   */
   const resetSelected = () => {
     app?.stage.children.forEach((child) => {
       if (child instanceof Graphics) {
@@ -72,6 +93,7 @@ export const useDraw = ({ app }: { app: Application | null }) => {
           child.roundRect(0, 0, node.width, node.height, 0);
           child.fill("#ffffff", 0.25);
           child.stroke({ width: 2, color: "#e1e1e1" });
+          hideHandler();
         }
       }
     });
@@ -81,5 +103,6 @@ export const useDraw = ({ app }: { app: Application | null }) => {
     drawGraphic,
     querySelected,
     resetSelected,
+    initHandler,
   };
 };

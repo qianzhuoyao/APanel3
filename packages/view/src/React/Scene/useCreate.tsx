@@ -25,12 +25,19 @@ export const useCreate = <T extends Record<string, unknown>>({
   root: INode | null;
   deps: T;
 }) => {
+  /**
+   * 变量
+   */
   const variablesRef = useRef<{
     v: Partial<T>;
   }>({ v: {} });
-
+  /**
+   * 订阅者
+   */
   const subscribersRef = useRef<Partial<ISubscriber>>({});
-
+  /**
+   * 图形
+   */
   const graphicRef = useRef<{
     selection: Graphics | null;
     isDrawing: boolean;
@@ -41,6 +48,9 @@ export const useCreate = <T extends Record<string, unknown>>({
     startPoint: { x: 0, y: 0 },
   });
 
+  /**
+   * 创建selection
+   */
   const createSelection = () => {
     if (graphicRef.current.selection) {
       return graphicRef.current.selection;
@@ -51,6 +61,11 @@ export const useCreate = <T extends Record<string, unknown>>({
     return graphicRef.current.selection;
   };
 
+  /**
+   * 获取尺寸和位置
+   * @param event
+   * @returns
+   */
   const getSizePosition = (event: FederatedPointerEvent) => {
     const width = Math.abs(event.pageX - graphicRef.current.startPoint.x);
     const height = Math.abs(event.pageY - graphicRef.current.startPoint.y);
@@ -64,6 +79,10 @@ export const useCreate = <T extends Record<string, unknown>>({
     };
   };
 
+  /**
+   * 指针按下
+   * @param event
+   */
   const handlePointerDown = (event: FederatedPointerEvent) => {
     if (event.button === 0) {
       graphicRef.current.selection!.visible = false;
@@ -74,6 +93,10 @@ export const useCreate = <T extends Record<string, unknown>>({
     console.log("pointerdown");
   };
 
+  /**
+   * 指针移动
+   * @param event
+   */
   const handlePointerMove = (event: FederatedPointerEvent) => {
     if (graphicRef.current.isDrawing) {
       const { width, height, x, y } = getSizePosition(event);
@@ -92,6 +115,10 @@ export const useCreate = <T extends Record<string, unknown>>({
       graphicRef.current.selection!.stroke({ width: 2, color: "#e1e1e1" });
     }
   };
+  /**
+   * 指针抬起
+   * @param event
+   */
   const handlePointerUp = (event: FederatedPointerEvent) => {
     const { width, height, x, y } = getSizePosition(event);
     graphicRef.current.isDrawing = false;
@@ -119,6 +146,9 @@ export const useCreate = <T extends Record<string, unknown>>({
     subscribersRef.current.onStagePointerUp?.(event);
   };
 
+  /**
+   * 初始化
+   */
   useEffect(() => {
     if (app) {
       variablesRef.current.v = deps || {};
@@ -135,6 +165,10 @@ export const useCreate = <T extends Record<string, unknown>>({
     }
   }, [app, deps]);
 
+  /**
+   * 通知订阅者
+   * @param subscriber
+   */
   const notifySubscriber = (subscriber: ISubscriber) => {
     subscribersRef.current = subscriber;
   };

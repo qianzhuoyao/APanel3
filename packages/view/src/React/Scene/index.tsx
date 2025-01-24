@@ -1,9 +1,5 @@
-import { IStageProp } from "./type";
-import { createNode } from "@repo/model/NodeModel";
 import { useEffect, useRef } from "react";
-import { LEVEL } from "../Root/level";
-import { translateRoot } from "./translate";
-import { setRoot, setSelectionNodeIdList } from "../Store/sceneStore";
+import { setSelectionNodeIdList } from "../Store/sceneStore";
 import { useDispatch, useSelector } from "react-redux";
 /**
  * 场景
@@ -19,8 +15,8 @@ import { useRoot } from "./useRoot";
 import { ContextMenu } from "./contextMenu";
 import { useCreate } from "./useCreate";
 import { ACTION_MODE } from "../Root/actionConstant";
-import { FederatedPointerEvent, Rectangle } from "pixi.js";
 import { INode } from "@repo/model/NodeModel/type";
+import { getApp } from "./app";
 
 export const Scene = () => {
   const globalVariablesRef = useRef<{
@@ -36,16 +32,19 @@ export const Scene = () => {
   const actionMode = useSelector(
     (state: { scene: { actionMode: IActionMode } }) => state.scene.actionMode
   );
-
+  /**
+   * 获取root
+   */
   const root = useRoot();
 
   /**
    * 初始化场景
    */
-  const { setContainer, loading, app } = useInit();
+  const { setContainer, loading, load } = useInit();
 
-  console.log(actionMode, `actionMode2`);
-
+  /**
+   * 设置actionMode
+   */
   useEffect(() => {
     globalVariablesRef.current = {
       actionMode,
@@ -57,15 +56,33 @@ export const Scene = () => {
    */
   const { notifySubscriber } = useCreate<{
     actionMode: IActionMode;
-  }>({ app, root, deps: { actionMode } });
+  }>({ app: getApp().app, root, deps: { actionMode } });
 
-  const { drawGraphic, resetSelected } = useDraw({ app });
+  /**
+   * 绘制
+   */
+  const { drawGraphic, resetSelected, initHandler } = useDraw({
+    app: getApp().app,
+  });
 
+  /**
+   * 初始化绘制,绘制绘制工具handler
+   */
+  load(() => {
+    initHandler();
+  });
+
+  /**
+   * 获取selectionNodeIdList
+   */
   const selectionNodeIdList = useSelector(
     (state: { scene: { selectionNodeIdList: string[] } }) =>
       state.scene.selectionNodeIdList
   );
 
+  /**
+   * 设置selectionNodeIdList
+   */
   const setSelected = (node: INode | void) => {
     console.log(node, `setSelected`);
     if (node) {
@@ -74,17 +91,24 @@ export const Scene = () => {
       dispatch(setSelectionNodeIdList([]));
     }
   };
-  console.log(selectionNodeIdList,'selectionNodeIdList')
-
+  /**
+   * 通知订阅者
+   */
   notifySubscriber({
+    /**
+     * 舞台指针抬起
+     */
     onStagePointerUp: (event) => {
       if (globalVariablesRef.current.actionMode === ACTION_MODE.MOVE) {
-        if (event.target === app?.stage) {
+        if (event.target === getApp().app?.stage) {
           setSelected();
           resetSelected();
         }
       }
     },
+    /**
+     * 创建回调
+     */
     createdCallback: (node) => {
       if (globalVariablesRef.current.actionMode === ACTION_MODE.RECT) {
         const { g, setGraphicSelected } = drawGraphic({
@@ -97,6 +121,7 @@ export const Scene = () => {
         g?.on("pointerup", () => {
           //闭包
           if (globalVariablesRef.current.actionMode === ACTION_MODE.MOVE) {
+            console.log(getApp().app, getApp(), "cevv");
             setGraphicSelected();
             setSelected(node);
           }
