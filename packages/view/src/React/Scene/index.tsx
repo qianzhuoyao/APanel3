@@ -17,6 +17,7 @@ import { useCreate } from "./useCreate";
 import { ACTION_MODE } from "../Root/actionConstant";
 import { INode } from "@repo/model/NodeModel/type";
 import { getApp } from "./app";
+import { getRenderStore } from "../../Store";
 
 export const Scene = () => {
   const globalVariablesRef = useRef<{
@@ -129,6 +130,8 @@ export const Scene = () => {
       }
     },
   });
+
+
 
   return (
     <div ref={setContainer} className="w-full h-full overflow-hidden">

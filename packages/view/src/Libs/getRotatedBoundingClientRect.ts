@@ -1,3 +1,10 @@
+
+/**
+ * Get the bounding client rect of an element after it has been rotated
+ * @param element - The element to get the bounding client rect of
+ * @param angle - The angle to rotate the element by
+ * @returns The bounding client rect of the element after it has been rotated
+ */
 export function getRotatedBoundingClientRect(
   element: HTMLElement,
   angle: number
