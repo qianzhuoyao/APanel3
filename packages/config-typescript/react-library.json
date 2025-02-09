@@ -3,9 +3,10 @@
   "display": "React Library",
   "extends": "./base.json",
   "compilerOptions": {
-    "lib": ["ES2020", "DOM"],
+    "lib": ["es2015", "DOM"],
     "module": "ESNext",
-   "target": "ES2020",
+    "downlevelIteration": true,
+   "target": "es2015",
     "jsx": "react-jsx",
     "noEmit": true
   }
