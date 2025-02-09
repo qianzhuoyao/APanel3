@@ -21,7 +21,7 @@ export const logAndRetryMiddleware: Middleware<any> = async (store, task, next) 
                 if (attempt >= (task.maxRetries || maxRetries)) {
                     console.error(`[重试失败] 最大重试次数已达，任务失败！`);
                     store.state = previousState;
-                    store.notify();
+                    store.notify('error');
                     return;
                 }
 

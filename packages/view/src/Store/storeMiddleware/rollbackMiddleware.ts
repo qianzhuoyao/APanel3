@@ -11,6 +11,6 @@ export const rollbackMiddleware: Middleware<any> = async (
   } catch (error) {
     console.error(`[Rollback Middleware] 错误发生，回滚到上一个有效状态`);
     store.state = previousState;
-    store.notify();
+    store.notify('roll');
   }
 };

@@ -1,5 +1,4 @@
 import { Provider } from "react-redux";
-import { Scene } from "../Scene";
 import { store } from "../Store/sceneStore";
 import type { IRootProp } from "./type";
 import { NodeMapTree } from "./nodeMapTree";

@@ -4,7 +4,11 @@ export class NodeManager {
   private nodes: Map<string, BaseNode> = new Map();
 
   getNodes() {
-    return [...this.nodes.values()];
+    const result: BaseNode[] = [];
+    this.nodes.forEach((value) => {
+      result.push(value);
+    });
+    return result;
   }
 
   // 添加节点

@@ -2,22 +2,19 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { configureStore } from "@reduxjs/toolkit";
 import { ACTION_MODE, ACTION_TYPE } from "../Root/actionConstant";
 import { IActionMode, IActionType } from "../Root/type";
-import { INodeContent } from "../Scene/type";
+
 
 const sceneSlice = createSlice({
   name: "scene",
   initialState: {
     scale: 1,
     root: null,
-    allNodes: [] as INodeContent[],
     isLock: false,
     selectionNodeIdList: [] as string[],
     actionMode: ACTION_MODE.MOVE as IActionMode, // 这是默认选择的工具
   },
   reducers: {
-    setAllNodes: (state, action: PayloadAction<INodeContent[]>) => {
-      state.allNodes = action.payload;
-    },
+
     setRoot: (state, action) => {
       state.root = action.payload;
     },
@@ -44,7 +41,6 @@ export const store = configureStore({
 });
 export const {
   setRoot,
-  setAllNodes,
   setIsLock,
   setSelectionNodeIdList,
   setActionMode,
