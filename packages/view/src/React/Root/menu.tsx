@@ -509,11 +509,11 @@ export const Menu = ({ level }: { level: number }) => {
           //   name: "星形",
           //   icon: (fill: string) => <Start fill={fill} />,
           // },
-          {
-            id: ACTION_MODE.IMAGE,
-            name: "图片 ",
-            icon: (fill: string) => <Image fill={fill} />,
-          },
+          // {
+          //   id: ACTION_MODE.IMAGE,
+          //   name: "图片 ",
+          //   icon: (fill: string) => <Image fill={fill} />,
+          // },
         ],
       },
       // {

@@ -21,12 +21,12 @@ export function createDraggableRect(
       filter(() => action === ACTION_MODE.RECT),
       switchMap((startEvent) => {
         const rect = document.createElement("div");
-        rect.classList.add('target')
+        rect.classList.add("target");
         rect.style.position = "absolute";
         rect.style.border = "1px solid black";
         rect.style.backgroundColor = "rgba(0, 0, 255, 0.3)";
         container.appendChild(rect);
-
+        rect.setAttribute("attr", "RECT");
         const startX = startEvent.clientX;
         const startY = startEvent.clientY;
         rect.style.left = `${startX}px`;

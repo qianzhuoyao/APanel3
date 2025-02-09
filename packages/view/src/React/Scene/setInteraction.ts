@@ -3,6 +3,9 @@ import { useEffect, useRef } from "react";
 import Selecto from "selecto";
 import { getRenderStore } from "../../Store";
 import { BaseNode } from "@repo/model/NodeManager/type";
+import { IActionMode } from "../Root/type";
+import { useSelector } from "react-redux";
+import { ACTION_MODE } from "../Root/actionConstant";
 
 const hitRate = 0;
 const selectByClick = true;
@@ -22,8 +25,12 @@ const rotatable = true;
 const throttleRotate = 0;
 const rotationPosition = "top";
 const originDraggable = true;
-const originRelative = true;
+const originRelative = false;
 export const useInteraction = () => {
+  const actionMode = useSelector(
+    (state: { scene: { actionMode: IActionMode } }) => state.scene.actionMode
+  );
+
   const instanceRef = useRef<{
     targets: (HTMLElement | SVGElement)[];
     M: Moveable | null;
@@ -85,12 +92,18 @@ export const useInteraction = () => {
       ratio: ratio,
     });
     instanceRef.current.M.on("clickGroup", (e) => {
-      instanceRef.current.S!.clickTarget(e.inputEvent, e.inputTarget);
+      if (actionMode === ACTION_MODE.MOVE) {
+        instanceRef.current.S!.clickTarget(e.inputEvent, e.inputTarget);
+      }
     });
     instanceRef.current.M.on("render", (e) => {
       e.target.style.cssText += e.cssText;
     });
     instanceRef.current.S.on("dragStart", (e: any) => {
+      if (actionMode !== ACTION_MODE.MOVE) {
+        e.stop();
+      }
+
       const target = e.inputEvent.target;
       if (
         instanceRef.current.M!.isMoveableElement(target) ||
@@ -102,28 +115,35 @@ export const useInteraction = () => {
       }
     });
     instanceRef.current.S.on("select", (e) => {
-      if (e.isDragStartEnd) {
-        return;
+      if (actionMode === ACTION_MODE.MOVE) {
+        if (e.isDragStartEnd) {
+          return;
+        }
+        setTargets(e.selected);
       }
-      setTargets(e.selected);
     });
     instanceRef.current.S.on("selectEnd", (e) => {
-      console.log(e, "selectEndsss");
-      if (e.isDragStartEnd) {
-        e.inputEvent.preventDefault();
-        instanceRef.current.M!.waitToChangeTarget().then(() => {
-          instanceRef.current.M!.dragStart(e.inputEvent);
-        });
+      if (actionMode === ACTION_MODE.MOVE) {
+        console.log(e, "selectEndsss");
+        if (e.isDragStartEnd) {
+          e.inputEvent.preventDefault();
+          instanceRef.current.M!.waitToChangeTarget().then(() => {
+            instanceRef.current.M!.dragStart(e.inputEvent);
+          });
+        }
+        setTargets(e.selected);
       }
-      setTargets(e.selected);
     });
     instanceRef.current.M.on("renderGroup", (e) => {
       e.events.forEach((ev) => {
         ev.target.style.cssText += ev.cssText;
       });
     });
+
     instanceRef.current.M.on("dragStart", () => {
-      console.log("solsweweeee");
+      if (actionMode === ACTION_MODE.MOVE) {
+        console.log("solsweweeee");
+      }
     });
   };
 

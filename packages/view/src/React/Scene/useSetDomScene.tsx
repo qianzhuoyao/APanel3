@@ -3,6 +3,7 @@ import { IActionMode } from "../Root/type";
 import { createDraggableRect } from "./createRectDom";
 import { useInteraction } from "./setInteraction";
 import { getRenderStore } from "../../Store";
+import { createInputDom } from "./createInputDom";
 
 export const useSetDomScene = (action: IActionMode) => {
   const domRef = useRef<{ dom: HTMLElement | null }>({
@@ -22,6 +23,19 @@ export const useSetDomScene = (action: IActionMode) => {
       //设置容器
       setContainer(domRef.current.dom);
 
+      const { createSubscription: textSubscription } = createInputDom(
+        action,
+        domRef.current.dom,
+        {
+          createdCallback: () => {
+            getRenderStore()
+              .nodeManager.getNodes()
+              .map((node) => document.getElementById(node.id))
+              .filter((a) => !!a);
+          },
+        }
+      );
+
       const { createSubscription: rectSubscription } = createDraggableRect(
         action,
         domRef.current.dom,
@@ -37,6 +51,7 @@ export const useSetDomScene = (action: IActionMode) => {
 
       return () => {
         rectSubscription.unsubscribe();
+        textSubscription.unsubscribe();
         destory();
       };
     }
