@@ -3,20 +3,22 @@ const mutations = {
     ...state,
     nodes: payload,
   }),
+  setSelected: (state, payload) => ({
+    ...state,
+    selected: payload,
+  }),
 };
 
 self.onmessage = function (event) {
-  const { type, tasks } = event.data;
+  const { type,model, tasks } = event.data;
   console.log(event, "event");
   if (type === "batchCommit") {
     const results = tasks.map((task) => {
       try {
-        // 模拟 mutation 执行
         const mutation = task.mutationName;
         const payload = task.payload;
         const modelState = task.prevState;
-
-        const newState = mutations[mutation](modelState, payload); // 执行 mutation
+        const newState = mutations[mutation](modelState, payload);
         return { model: task.model, newState };
       } catch (error) {
         console.error("Worker Error:", error);
@@ -24,6 +26,6 @@ self.onmessage = function (event) {
       }
     });
 
-    self.postMessage({ results });
+    self.postMessage({ results,model });
   }
 };

@@ -6,7 +6,8 @@ import { cloneDeep } from "lodash";
 export class Store<T extends Record<string, any>> {
   public state: T;
   private worker: Worker;
-  private listeners: ((state: T) => void)[] = [];
+  private listeners: Record<string, ((state: T, model: keyof T) => void)[]> =
+    {};
   private priorityQueue: Task<T>[] = [];
   private processing = false;
   public history: T[] = [];
@@ -29,22 +30,22 @@ export class Store<T extends Record<string, any>> {
     this.middlewares = middlewares;
     this.worker.onmessage = (event) => {
       console.log(event, "results");
-      const { results } = event.data;
+      const { results, model } = event.data;
       results.forEach(
         ({ model, newState }: { model: keyof T; newState: any }) => {
           console.log(this.state, model, newState, "this.state");
           this.state[model] = newState[model];
         }
       );
-      this.notify();
+      this.notify(model);
       this.processing = false;
-      this.processQueue();
+      this.processQueue(model);
     };
 
     this.channel.onmessage = (event) => {
       if (event.data && event.data.type === "syncState") {
         this.state = event.data.state;
-        this.notify();
+        this.notify("syncState");
       }
     };
   }
@@ -112,7 +113,7 @@ export class Store<T extends Record<string, any>> {
         } else {
           this.priorityQueue.push(task);
           this.priorityQueue.sort((a, b) => b.priority - a.priority);
-          this.processQueue();
+          this.processQueue(model);
         }
       });
     } catch (err) {
@@ -149,7 +150,7 @@ export class Store<T extends Record<string, any>> {
       console.log(this.state, "diss");
       this.future.push(cloneDeep(this.state)); // 把当前状态放到 redo 栈
       this.state = lastState; // 恢复上一个状态
-      this.notify();
+      this.notify("undo");
     } catch (error) {
       console.error(error);
     }
@@ -165,10 +166,10 @@ export class Store<T extends Record<string, any>> {
     const nextState = this.future.pop()!;
     this.history.push(this.state); // 把当前状态放到 undo 栈
     this.state = nextState; // 恢复下一个状态
-    this.notify();
+    this.notify("redo");
   }
 
-  private processQueue() {
+  private processQueue(model: keyof T) {
     if (this.processing || this.priorityQueue.length === 0) {
       return;
     }
@@ -176,29 +177,34 @@ export class Store<T extends Record<string, any>> {
     this.processing = true;
     const batchSize = Math.min(5, this.priorityQueue.length);
     const tasks = this.priorityQueue.splice(0, batchSize);
-    console.log(
-      this.processing,
-      this.priorityQueue.length,
-      this.worker,
-      tasks,
-      "psq"
-    );
     this.worker.postMessage({
       type: "batchCommit",
+      model,
       tasks,
     });
   }
 
-  public subscribe(listener: (state: T) => void) {
-    this.listeners.push(listener);
-  }
-  public unSubscribe() {
-    this.listeners = [];
+  public subscribe(listener: (state: T, model: keyof T) => void) {
+    const name = v4();
+    if (!Array.isArray(this.listeners[name])) {
+      this.listeners[name] = [];
+    }
+    this.listeners[name].push(listener);
+
+    return {
+      unSubscribe: () => {
+        this.listeners[name] = [];
+      },
+    };
   }
 
-  public notify() {
-    this.listeners.forEach((listener) => listener(this.state));
-
+  public notify(model: keyof T) {
+    // this.listeners.forEach((listener) => listener(this.state, model));
+    Object.values(this.listeners).forEach((listener) =>
+      listener.forEach((l) => {
+        l(this.state, model);
+      })
+    );
     this.channel.postMessage({
       type: "syncState",
       state: this.state,

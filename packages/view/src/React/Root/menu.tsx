@@ -15,6 +15,26 @@ import { motion } from "framer-motion";
 import { ACTION_MODE } from "./actionConstant";
 import { IActionMode } from "./type";
 
+const Selection = ({ fill }: { fill?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="none"
+        stroke={fill}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+        d="M7 4H4v3m0 4v2m7-9h2m-2 16h2m7-9v2m-3-9h3v3M7 20H4v-3m13 3h3v-3"
+      />
+    </svg>
+  );
+};
+
 const Frame = ({ fill }: { fill?: string }) => {
   return (
     <svg
@@ -418,9 +438,14 @@ export const Menu = ({ level }: { level: number }) => {
         children: [
           {
             id: ACTION_MODE.MOVE,
-            name: "移动与选择工具 ",
+            name: "框选与操作工具 ",
             icon: (fill: string) => <Move fill={fill} />,
           },
+          // {
+          //   id: ACTION_MODE.SELECTION,
+          //   name: "选择工具 ",
+          //   icon: (fill: string) => <Selection fill={fill} />,
+          // },
           {
             id: ACTION_MODE.SCALE,
             name: "缩放工具 ",
@@ -429,27 +454,27 @@ export const Menu = ({ level }: { level: number }) => {
         ],
       },
 
-      {
-        id: ACTION_MODE.REGION,
-        defaultId: ACTION_MODE.SECTION,
-        children: [
-          {
-            id: ACTION_MODE.FRAME,
-            name: "框架 ",
-            icon: (fill: string) => <Frame fill={fill} />,
-          },
-          {
-            id: ACTION_MODE.SLICE,
-            name: "切片 ",
-            icon: (fill: string) => <Slice fill={fill} />,
-          },
-          {
-            id: ACTION_MODE.SECTION,
-            name: "合集 ",
-            icon: (fill: string) => <Section fill={fill} />,
-          },
-        ],
-      },
+      // {
+      //   id: ACTION_MODE.REGION,
+      //   defaultId: ACTION_MODE.SECTION,
+      //   children: [
+      //     {
+      //       id: ACTION_MODE.FRAME,
+      //       name: "框架 ",
+      //       icon: (fill: string) => <Frame fill={fill} />,
+      //     },
+      //     {
+      //       id: ACTION_MODE.SLICE,
+      //       name: "切片 ",
+      //       icon: (fill: string) => <Slice fill={fill} />,
+      //     },
+      //     {
+      //       id: ACTION_MODE.SECTION,
+      //       name: "合集 ",
+      //       icon: (fill: string) => <Section fill={fill} />,
+      //     },
+      //   ],
+      // },
       {
         id: ACTION_MODE.SHAPE,
         defaultId: ACTION_MODE.RECT,
@@ -459,31 +484,31 @@ export const Menu = ({ level }: { level: number }) => {
             name: "矩形",
             icon: (fill: string) => <Rect fill={fill} />,
           },
-          {
-            id: ACTION_MODE.LINE,
-            name: "线条",
-            icon: (fill: string) => <Line fill={fill} />,
-          },
-          {
-            id: ACTION_MODE.ARROW,
-            name: "箭头",
-            icon: (fill: string) => <Arrow fill={fill} />,
-          },
-          {
-            id: ACTION_MODE.ELLIPSE,
-            name: "椭圆",
-            icon: (fill: string) => <Circle fill={fill} />,
-          },
-          {
-            id: ACTION_MODE.POLYGON,
-            name: "多边形 ",
-            icon: (fill: string) => <Triangle fill={fill} />,
-          },
-          {
-            id: ACTION_MODE.STAR,
-            name: "星形",
-            icon: (fill: string) => <Start fill={fill} />,
-          },
+          // {
+          //   id: ACTION_MODE.LINE,
+          //   name: "线条",
+          //   icon: (fill: string) => <Line fill={fill} />,
+          // },
+          // {
+          //   id: ACTION_MODE.ARROW,
+          //   name: "箭头",
+          //   icon: (fill: string) => <Arrow fill={fill} />,
+          // },
+          // {
+          //   id: ACTION_MODE.ELLIPSE,
+          //   name: "椭圆",
+          //   icon: (fill: string) => <Circle fill={fill} />,
+          // },
+          // {
+          //   id: ACTION_MODE.POLYGON,
+          //   name: "多边形 ",
+          //   icon: (fill: string) => <Triangle fill={fill} />,
+          // },
+          // {
+          //   id: ACTION_MODE.STAR,
+          //   name: "星形",
+          //   icon: (fill: string) => <Start fill={fill} />,
+          // },
           {
             id: ACTION_MODE.IMAGE,
             name: "图片 ",
@@ -491,22 +516,22 @@ export const Menu = ({ level }: { level: number }) => {
           },
         ],
       },
-      {
-        id: ACTION_MODE.PENS,
-        defaultId: ACTION_MODE.PEN,
-        children: [
-          {
-            id: ACTION_MODE.PEN,
-            name: "钢笔 ",
-            icon: (fill: string) => <Pen fill={fill} />,
-          },
-          {
-            id: ACTION_MODE.PENCIL,
-            name: "铅笔 ",
-            icon: (fill: string) => <Pencil fill={fill} />,
-          },
-        ],
-      },
+      // {
+      //   id: ACTION_MODE.PENS,
+      //   defaultId: ACTION_MODE.PEN,
+      //   children: [
+      //     {
+      //       id: ACTION_MODE.PEN,
+      //       name: "钢笔 ",
+      //       icon: (fill: string) => <Pen fill={fill} />,
+      //     },
+      //     {
+      //       id: ACTION_MODE.PENCIL,
+      //       name: "铅笔 ",
+      //       icon: (fill: string) => <Pencil fill={fill} />,
+      //     },
+      //   ],
+      // },
       {
         id: ACTION_MODE.TEXTS,
         defaultId: ACTION_MODE.TEXT,
@@ -529,43 +554,43 @@ export const Menu = ({ level }: { level: number }) => {
           },
         ],
       },
-      {
-        id: ACTION_MODE.COMPONENTS,
-        defaultId: ACTION_MODE.COMPONENT,
-        children: [
-          {
-            id: ACTION_MODE.COMPONENT,
-            name: "组件",
-            icon: (fill: string) => <Component fill={fill} />,
-          },
-        ],
-      },
-      {
-        id: ACTION_MODE.VIEWS,
-        defaultId: ACTION_MODE.RULER,
-        children: [
-          {
-            id: ACTION_MODE.RULER,
-            name: "标尺",
-            icon: (fill: string) => <Ruler fill={fill} />,
-          },
-          {
-            id: ACTION_MODE.GRID,
-            name: "网格",
-            icon: (fill: string) => <Grid fill={fill} />,
-          },
-          {
-            id: ACTION_MODE.LAYOUT,
-            name: "布局",
-            icon: (fill: string) => <Layout fill={fill} />,
-          },
-          {
-            id: ACTION_MODE.PIXEL,
-            name: "像素",
-            icon: (fill: string) => <Pixel fill={fill} />,
-          },
-        ],
-      },
+      // {
+      //   id: ACTION_MODE.COMPONENTS,
+      //   defaultId: ACTION_MODE.COMPONENT,
+      //   children: [
+      //     {
+      //       id: ACTION_MODE.COMPONENT,
+      //       name: "组件",
+      //       icon: (fill: string) => <Component fill={fill} />,
+      //     },
+      //   ],
+      // },
+      // {
+      //   id: ACTION_MODE.VIEWS,
+      //   defaultId: ACTION_MODE.RULER,
+      //   children: [
+      //     {
+      //       id: ACTION_MODE.RULER,
+      //       name: "标尺",
+      //       icon: (fill: string) => <Ruler fill={fill} />,
+      //     },
+      //     {
+      //       id: ACTION_MODE.GRID,
+      //       name: "网格",
+      //       icon: (fill: string) => <Grid fill={fill} />,
+      //     },
+      //     {
+      //       id: ACTION_MODE.LAYOUT,
+      //       name: "布局",
+      //       icon: (fill: string) => <Layout fill={fill} />,
+      //     },
+      //     {
+      //       id: ACTION_MODE.PIXEL,
+      //       name: "像素",
+      //       icon: (fill: string) => <Pixel fill={fill} />,
+      //     },
+      //   ],
+      // },
     ],
     []
   );

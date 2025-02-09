@@ -7,8 +7,8 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./NodeModel": "./src/NodeModel/index.ts",
-    "./NodeModel/type": "./src/NodeModel/type.ts"
+    "./NodeManager": "./src/Node/index.ts",
+    "./NodeManager/type": "./src/Node/type.ts"
   },
   "peerDependencies": {
     "react": "^18.2.0",

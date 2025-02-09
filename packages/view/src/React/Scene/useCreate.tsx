@@ -1,12 +1,12 @@
-import { createNode } from "@repo/model/NodeModel";
-import { INode } from "@repo/model/NodeModel/type";
+
+import { BaseNode } from "@repo/model/NodeManager/type";
 import { Application, FederatedPointerEvent, Graphics } from "pixi.js";
 import { useEffect, useRef } from "react";
 
 interface ISubscriber {
   onStagePointerUp?: (e: FederatedPointerEvent) => void;
   createdCallback: (
-    node: INode,
+    node: BaseNode,
     info: {
       x: number;
       y: number;
@@ -22,7 +22,7 @@ export const useCreate = <T extends Record<string, unknown>>({
   deps,
 }: {
   app: Application | null;
-  root: INode | null;
+  root: BaseNode | null;
   deps: T;
 }) => {
   /**
@@ -123,22 +123,9 @@ export const useCreate = <T extends Record<string, unknown>>({
     const { width, height, x, y } = getSizePosition(event);
     graphicRef.current.isDrawing = false;
     if (width > 10 && height > 10) {
-      const { node } = createNode({
-        parent: root,
-        type: "rect",
-        name: "rect",
-        x,
-        y,
-        width,
-        height,
-      });
+      
       console.log(variablesRef.current.v, "variablesRef.current.v");
-      subscribersRef.current.createdCallback?.(node, {
-        x,
-        y,
-        width,
-        height,
-      });
+    
       graphicRef.current.selection!.visible = false;
       graphicRef.current.startPoint = { x: 0, y: 0 };
     }

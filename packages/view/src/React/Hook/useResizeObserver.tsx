@@ -5,6 +5,11 @@ type Size = {
   height: number;
 };
 
+
+/**
+ * useResizeObserver
+ * @returns   {size: Size | undefined, ref: (node: T | null) => void}
+ */
 export const useResizeObserver = <T extends HTMLElement>() => {
   const [size, setSize] = useState<Size | undefined>();
   const targetRef = useRef<T | null>(null);

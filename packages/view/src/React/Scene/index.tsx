@@ -15,7 +15,7 @@ import { useRoot } from "./useRoot";
 import { ContextMenu } from "./contextMenu";
 import { useCreate } from "./useCreate";
 import { ACTION_MODE } from "../Root/actionConstant";
-import { INode } from "@repo/model/NodeModel/type";
+
 import { getApp } from "./app";
 import { getRenderStore } from "../../Store";
 
@@ -82,17 +82,6 @@ export const Scene = () => {
   );
 
   /**
-   * 设置selectionNodeIdList
-   */
-  const setSelected = (node: INode | void) => {
-    console.log(node, `setSelected`);
-    if (node) {
-      dispatch(setSelectionNodeIdList([node.id]));
-    } else {
-      dispatch(setSelectionNodeIdList([]));
-    }
-  };
-  /**
    * 通知订阅者
    */
   notifySubscriber({
@@ -102,7 +91,6 @@ export const Scene = () => {
     onStagePointerUp: (event) => {
       if (globalVariablesRef.current.actionMode === ACTION_MODE.MOVE) {
         if (event.target === getApp().app?.stage) {
-          setSelected();
           resetSelected();
         }
       }
@@ -112,26 +100,9 @@ export const Scene = () => {
      */
     createdCallback: (node) => {
       if (globalVariablesRef.current.actionMode === ACTION_MODE.RECT) {
-        const { g, setGraphicSelected } = drawGraphic({
-          width: node.width,
-          height: node.height,
-          x: node.x,
-          y: node.y,
-        });
-        node.componentId = g.uid.toString();
-        g?.on("pointerup", () => {
-          //闭包
-          if (globalVariablesRef.current.actionMode === ACTION_MODE.MOVE) {
-            console.log(getApp().app, getApp(), "cevv");
-            setGraphicSelected();
-            setSelected(node);
-          }
-        });
       }
     },
   });
-
-
 
   return (
     <div ref={setContainer} className="w-full h-full overflow-hidden">
@@ -140,7 +111,7 @@ export const Scene = () => {
           <Spinner size="lg" />
         </div>
       ) : null}
-      <ContextMenu options={[{ item: () => <div>123</div> }]}></ContextMenu>
+     
     </div>
   );
 };

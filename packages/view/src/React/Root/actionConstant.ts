@@ -1,5 +1,6 @@
 export const ACTION_MODE = {
   TOOLS: "TOOLS",
+  SELECTION: "SELECTION",
   MOUSE: "MOUSE",
   SCALE: "SCALE",
   RECT: "RECT",
