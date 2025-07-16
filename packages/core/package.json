@@ -1,0 +1,37 @@
+{
+  "name": "@repo/core",
+  "version": "0.0.1",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "cross-env NODE_ENV=production tailwindcss -i ./src/tailwind.css -o ./dist/index.css",
+    "lint": "eslint src/",
+    "dev": "cross-env NODE_ENV=development tailwindcss -i ./src/tailwind.css -o ./dist/index.css --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@repo/lib": "workspace:*",
+    "dayjs": "^1.11.13",
+    "immutable": "^5.0.3",
+    "rxjs": "^7.8.1",
+    "uuid": "^11.0.2"
+  },
+  "dependencies": {
+    "@nextui-org/react": "^2.6.11",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash": "4.17.15",
+    "@types/node": "^20.11.18",
+    "cross-env": "^7.0.3",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "^5.3.3"
+  }
+}

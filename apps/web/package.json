@@ -16,8 +16,7 @@
     "clsx": "^2.1.1"
   },
   "dependencies": {
-    "@repo/view": "workspace:*",
-    "@repo/model": "workspace:*",
+    "@repo/apanel-render-react": "workspace:*",
     "next": "^14.2.3"
   },
   "devDependencies": {

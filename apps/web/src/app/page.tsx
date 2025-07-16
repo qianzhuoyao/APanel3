@@ -1,10 +1,13 @@
 "use client";
-import { ReactView } from "@repo/view";
+import { useApanel } from "@repo/apanel-render-react";
 
 export default function Page(): JSX.Element {
+  const { setSceneRef, placeholder } = useApanel();
   return (
     <main className="h-screen w-screen">
-      <ReactView.Root className="w-full h-full" />
+      <div ref={setSceneRef} className="w-full h-full">
+        {placeholder("", { background: "red" }, {})}
+      </div>
     </main>
   );
 }

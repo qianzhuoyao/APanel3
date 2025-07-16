@@ -30,3 +30,9 @@ const App = () => {
 
 颜色：#1b1b1f
 大小：20px
+
+//to b 端 页面构建
+2BEditor
+
+//矢量编辑
+photoPanel

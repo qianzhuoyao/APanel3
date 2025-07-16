@@ -1,0 +1,5 @@
+export enum EVENT_NAME {
+  MOUSE_DOWN,
+  MOUSE_MOVE,
+  MOUSE_UP,
+}
